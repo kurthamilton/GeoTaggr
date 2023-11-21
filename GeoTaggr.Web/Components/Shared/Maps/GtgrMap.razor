@@ -1,0 +1,55 @@
+﻿ 
+<div @ref="@MapContainer" class="map-container">
+
+</div>
+
+@inject IJSRuntime JSRuntime
+@code {
+    [Parameter]
+    public IReadOnlyCollection<GtgrMapMarker>? Markers { get; set; }
+
+    private ElementReference? MapContainer { get; set; }
+
+    private bool ComponentRendered { get; set; }
+
+    private bool MapRendered { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        await base.OnAfterRenderAsync(firstRender);
+
+        ComponentRendered = true;
+
+        await RenderMapAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        await RenderMapAsync();
+    }
+
+    private object GetOptions()
+    {
+        return new
+        {
+            markers = Markers?.Select(x => new
+            {
+                lat = x.Lat,
+                @long = x.Long
+            }) ?? Enumerable.Empty<object>()
+        };
+    }
+
+    private async Task RenderMapAsync()
+    {
+        if (!ComponentRendered)
+        {
+            return;
+        }
+
+        object options = GetOptions();
+        await JSRuntime.InvokeVoidAsync("gtgr.maps.init", MapContainer, options);
+    }
+}

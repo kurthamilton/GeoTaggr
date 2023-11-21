@@ -1,0 +1,45 @@
+﻿@inherits GtgrFormComponentBase
+
+@if (Options == null)
+{
+    return;
+}
+
+<GtgrFormLabel
+    For="@(Id ?? AutoId)"
+    Required="@Required"
+    Text="@Label">
+</GtgrFormLabel>
+
+<select 
+    class="form-select" 
+    id="@(Id ?? AutoId)"
+    @attributes="@ValidationAttributes" 
+    @onchange="@OnSelectChange">
+    @if (!string.IsNullOrEmpty(Placeholder))
+    {
+        <option value="">@Placeholder</option>    
+    }
+
+    @foreach (SelectOption option in Options)
+    {
+        <option value="@option.Key">@option.Text</option>
+    }    
+</select>
+
+@code {
+    [Parameter]
+    public EventCallback<string?> OnChange { get; set; }
+
+    [Parameter]
+    public IReadOnlyCollection<SelectOption>? Options { get; set; }
+
+    [Parameter]
+    public string? Placeholder { get; set; }
+
+    private async Task OnSelectChange(ChangeEventArgs e)
+    {
+        string? value = e.Value?.ToString();
+        await OnChange.InvokeAsync(value);
+    }
+}

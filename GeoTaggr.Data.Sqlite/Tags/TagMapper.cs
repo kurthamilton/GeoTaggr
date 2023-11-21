@@ -1,55 +1,26 @@
-﻿using System.Data;
-using GeoTaggr.Core.Tags;
-using GeoTaggr.Data.Sqlite.Extensions;
+﻿using GeoTaggr.Core.Tags;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GeoTaggr.Data.Sqlite.Tags
 {
-    public class TagMapper : EntityMapper<Tag>
+    public class TagMapper : IEntityTypeConfiguration<Tag>
     {
-        public override IReadOnlyCollection<string> SelectColumns => new[]
+        public void Configure(EntityTypeBuilder<Tag> builder)
         {
-            "TagId",
-            "CreatedDate",
-            "UserId",
-            "CountryId",
-            "Name",
-            "Value",
-            "Lat",
-            "Long",
-            "Url"
-        };
+            builder.ToTable("Tags");
 
-        public override string TableName => "Tags";
+            builder.HasKey(x => x.TagId);
 
-        public override IReadOnlyCollection<string> InsertColumns => SelectColumns.Skip(1).ToArray();
+            builder
+                .Property(x => x.TagId)
+                .ValueGeneratedOnAdd();
 
-        public override IReadOnlyCollection<IDataParameter> InsertParameters(Tag entity)
-        {
-            return new[]
-            {
-                GetParameter("@CountryId", entity.CountryId, DbType.Int32),
-                GetParameter("@CreatedDate", entity.CreatedDate.ToString("yyyy-MM-dd HH:mm:ss"), DbType.String),
-                GetParameter("@UserId", entity.UserId, DbType.Int32),
-                GetParameter("@Name", entity.Name, DbType.String),
-                GetParameter("@Value", entity.Value, DbType.String),
-                GetParameter("@Lat", entity.Lat, DbType.Double),
-                GetParameter("@Long", entity.Lat, DbType.Double),
-                GetParameter("@Url", entity.Lat, DbType.String)
-            };
-        }
-
-        public override Tag Map(IDataReader reader)
-        {
-            return new Tag(
-                tagId: reader.GetInt32(0),
-                createdDate: DateTime.Parse(reader.GetString(1)),
-                userId: reader.GetInt32(2),
-                countryId: reader.GetInt32(3),
-                name: reader.GetString(4),
-                value: reader.GetString(5),
-                lat: reader.GetDoubleOrNull(6),
-                @long: reader.GetDoubleOrNull(7),
-                url: reader.GetStringOrNull(8));
+            builder.Property(x => x.CountryId);
+            builder.Property(x => x.CreatedDate);
+            builder.Property(x => x.Name);
+            builder.Property(x => x.TagId);
+            builder.Property(x => x.UserId);
         }
     }
 }

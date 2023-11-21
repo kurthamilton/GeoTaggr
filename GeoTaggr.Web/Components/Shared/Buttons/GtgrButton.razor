@@ -1,0 +1,60 @@
+<button 
+    class="btn @TypeClass @SizeClass @Class" 
+    type="button" 
+    @attributes="@Attributes"
+    @onclick="@OnButtonClicked">
+    @ChildContent
+</button>
+
+@inject IJSRuntime JSRuntime
+@code {
+    [Parameter]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public string? Confirm { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public GtgrButtonSize Size {get; set;}
+
+    [Parameter]
+    public GtgrButtonType Type { get; set; }
+
+    private string? SizeClass => Size switch
+    {
+        GtgrButtonSize.Small => "btn-sm",
+        _ => null
+    };
+
+    private string? TypeClass => Type switch
+    {
+        GtgrButtonType.Primary => "btn-primary",
+        GtgrButtonType.OutlinePrimary => "btn-outline-primary",
+        GtgrButtonType.Secondary => "btn-secondary",
+        GtgrButtonType.OutlineSecondary => "btn-outline-secondary",
+        _ => null
+    };
+
+    private async Task OnButtonClicked()
+    {
+        if (!string.IsNullOrEmpty(Confirm))
+        {
+            bool result = await JSRuntime.InvokeAsync<bool>("confirm", Confirm);
+            if (!result)
+            {
+                return;
+            }
+        }
+
+        await OnClick.InvokeAsync();
+    }
+}

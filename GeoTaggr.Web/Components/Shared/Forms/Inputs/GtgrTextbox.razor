@@ -1,0 +1,35 @@
+﻿@inherits GtgrFormComponentBase
+
+<GtgrFormLabel
+    For="@(Id ?? AutoId)"
+    Required="@Required"
+    Text="@Label">
+</GtgrFormLabel>
+
+<input 
+    id="@(Id ?? AutoId)" 
+    class="form-control" 
+    value="@Value" 
+    @onchange="@OnInputChanged"
+    @attributes="@ValidationAttributes" />
+
+@if (!string.IsNullOrEmpty(HelpText))
+{
+    <div class="text-body-secondary small">
+        @HelpText
+    </div>
+}
+
+@code {    
+    [Parameter]
+    public EventCallback<string?> OnChange { get; set; }
+    
+    [Parameter]
+    public object? Value { get; set; }    
+
+    private async Task OnInputChanged(ChangeEventArgs e)
+    {
+        Value = e.Value?.ToString();
+        await OnChange.InvokeAsync(Value?.ToString());
+    }    
+}

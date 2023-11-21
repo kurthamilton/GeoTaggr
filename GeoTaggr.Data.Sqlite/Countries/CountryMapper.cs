@@ -1,36 +1,19 @@
-﻿using System.Data;
-using GeoTaggr.Core.Countries;
+﻿using GeoTaggr.Core.Countries;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace GeoTaggr.Data.Sqlite.Countries
 {
-    public class CountryMapper : EntityMapper<Country>
+    public class CountryMapper : IEntityTypeConfiguration<Country>
     {
-        public override IReadOnlyCollection<string> SelectColumns => new[]
+        public void Configure(EntityTypeBuilder<Country> builder)
         {
-            "CountryId",
-            "Name",
-            "IsoCode3",
-            "IsoCode2"
-        };
+            builder.ToTable("Countries");
 
-        public override string TableName => "Countries";
-
-        public override IReadOnlyCollection<string> InsertColumns => SelectColumns.Skip(1).ToArray();
-
-        public override IReadOnlyCollection<IDataParameter> InsertParameters(Country country)
-        {
-            return new[]
-            {
-                GetParameter("@Name", country.Name, DbType.String),
-                GetParameter("@IsoCode3", country.IsoCode3, DbType.String),
-                GetParameter("@IsoCode2", country.IsoCode2, DbType.String)
-            };
+            builder.HasKey(x => x.CountryId);
+            builder.Property(x => x.IsoCode2);
+            builder.Property(x => x.IsoCode3);
+            builder.Property(x => x.Name);
         }
-
-        public override Country Map(IDataReader reader) => new Country(
-            countryId: reader.GetInt32(0), 
-            name: reader.GetString(1),
-            isoCode3: reader.GetString(2),
-            isoCode2: reader.GetString(3));
     }
 }

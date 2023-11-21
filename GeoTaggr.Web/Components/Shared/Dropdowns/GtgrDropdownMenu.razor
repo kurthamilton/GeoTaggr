@@ -1,0 +1,37 @@
+﻿@using GeoTaggr.Web.Components.Shared.Forms.Selects
+
+@if (Options == null)
+{
+    return;
+}
+
+<div class="dropdown-menu @AlignmentClass">
+    @foreach (SelectOption option in Options)
+    {
+        <div class="dropdown-item" @onclick="@(() => OnOptionSelected(option))">
+            @option.Text
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter]
+    public GtgrMenuAlignment Alignment { get; set; }
+
+    [Parameter]
+    public EventCallback<SelectOption> OnSelect { get; set; }
+
+    [Parameter]
+    public IReadOnlyCollection<SelectOption>? Options { get; set; }
+
+    private string? AlignmentClass => Alignment switch
+    {
+        GtgrMenuAlignment.Right => "dropdown-menu-end",
+        _ => null
+    };
+
+    private async Task OnOptionSelected(SelectOption option)
+    {
+        await OnSelect.InvokeAsync(option);
+    }
+}

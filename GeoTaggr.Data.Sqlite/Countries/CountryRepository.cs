@@ -5,21 +5,21 @@ namespace GeoTaggr.Data.Sqlite.Countries
 {
     public class CountryRepository : SqliteRepository, ICountryRepository
     {
-        private static readonly CountryMapper CountryMapper = new CountryMapper();
-
-        public CountryRepository(SqliteRepositorySettings settings)
-            : base(settings)
+        public CountryRepository(GeoTaggrContext context)
+            : base(context)
         {
         }
 
-        public Task<bool> AddCountryAsync(Country country)
-        {
-            return AddOneAsync(country, CountryMapper);
-        }
+        public Task<bool> AddCountryAsync(Country country) 
+            => AddOneAsync(country);
 
-        public Task<IReadOnlyCollection<Country>> GetCountriesAsync()
-        {
-            return ReadManyAsync(CountryMapper);
-        }
+        public Task<IReadOnlyCollection<Country>> GetCountriesAsync() 
+            => ReadManyAsync<Country>();
+        
+        public Task<Country?> GetCountryAsync(int countryId) 
+            => ReadSingleAsync<Country>(x => x.CountryId == countryId);
+
+        public Task<bool> UpdateCountryAsync(Country country)
+            => UpdateOneAsync(country);
     }
 }

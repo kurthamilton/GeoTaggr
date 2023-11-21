@@ -1,0 +1,150 @@
+﻿@using GeoTaggr.Core.Maps
+@using GeoTaggr.Services.Maps
+@using GeoTaggr.Services.Tags
+@using GeoTaggr.Web.Components.Shared.Buttons
+@using GeoTaggr.Web.Components.Shared.Dropdowns
+@using GeoTaggr.Web.Components.Shared.Forms
+@using GeoTaggr.Web.Components.Shared.Forms.Inputs
+@using GeoTaggr.Web.Components.Shared.Forms.Selects
+
+<form>
+    @if (CountryOptions != null)
+    {
+        <div class="mb-3">
+            <GtgrSelect
+                Placeholder="Select country..."
+                Label="Country"
+                Options="@CountryOptions"
+                Required="true"
+                OnChange="@OnCountrySelected">
+            </GtgrSelect>
+        </div>
+    }    
+
+    @if (TagNameOptions != null)
+    {        
+        <div class="mb-3">
+            <GtgrFormLabel
+                For="tag-name"
+                Text="Name"
+                Required="true">
+            </GtgrFormLabel>
+            <GtgrInputGroup>
+                <GtgrTextbox
+                    Id="tag-name"
+                    Required="true"
+                    Value="@TagInput.Name"
+                    OnChange="@(x => TagInput.Name = x)">
+                </GtgrTextbox>
+                <GtgrDropdownButton
+                    Type="GtgrButtonType.OutlineSecondary">
+                </GtgrDropdownButton>
+                <GtgrDropdownMenu 
+                    Alignment="GtgrMenuAlignment.Right"
+                    Options="@TagNameOptions"
+                    OnSelect="@OnTagNameSelected">
+                </GtgrDropdownMenu>                
+            </GtgrInputGroup>                        
+        </div>
+    }
+
+    <div class="mb-3">
+        <GtgrTextbox
+            Label="Value"
+            Required="true"
+            OnChange="@(x => TagInput.Value = x)">
+        </GtgrTextbox>
+    </div>
+
+    <div class="mb-3">
+        <GtgrTextbox
+            HelpText="Use the Google Maps streetview URL"
+            Label="Url"
+            OnChange="@OnUrlChanged">
+        </GtgrTextbox>
+    </div>
+
+    <div class="row">
+        <div class="col mb-3">
+            <GtgrTextbox 
+                Label="Lat"
+                Value="@TagInput.Lat"
+                OnChange="@(x => TagInput.Lat = double.Parse(x))">
+            </GtgrTextbox>
+        </div>
+
+        <div class="col mb-3">
+            <GtgrTextbox 
+                Label="Long"
+                Value="@TagInput.Long"
+                OnChange="@(x => TagInput.Long = double.Parse(x))">
+            </GtgrTextbox>
+        </div>
+    </div>    
+
+    <div>
+        <GtgrButton
+            Type="GtgrButtonType.Primary"
+            OnClick="@OnSubmitted">
+            Add
+        </GtgrButton>
+    </div>
+</form>
+
+@inject IMapService MapService
+@code {
+    [Parameter]
+    public IReadOnlyCollection<SelectOption>? CountryOptions { get; set; }
+
+    [Parameter]
+    public EventCallback<TagInput> OnSubmit { get; set; }
+
+    [Parameter]
+    public IReadOnlyCollection<string>? TagNames { get; set; }
+
+    private TagInput TagInput { get; } = new();
+
+    private IReadOnlyCollection<SelectOption>? TagNameOptions { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        TagNameOptions = TagNames
+            ?.Select(x => new SelectOption(x, x))
+            .ToArray();
+    }
+
+    private void OnCountrySelected(string? countryId)
+    {
+        if (int.TryParse(countryId, out int parsed))
+        {
+            TagInput.CountryId = parsed;
+        }
+        else
+        {
+            TagInput.CountryId = null;
+        }
+    }
+
+    private async Task OnSubmitted()
+    {
+        await OnSubmit.InvokeAsync(TagInput);
+    }
+
+    private void OnTagNameSelected(SelectOption option)
+    {
+        TagInput.Name = option.Text;
+    }
+
+    private void OnUrlChanged(string? url)
+    {
+        TagInput.Url = url;
+
+        if (MapService.TryParseLocation(url, out Coordinates? coordinates))
+        {
+            TagInput.Lat = coordinates.Lat;
+            TagInput.Long = coordinates.Long;
+        }
+    }
+}

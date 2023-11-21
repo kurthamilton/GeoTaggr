@@ -1,13 +1,17 @@
-﻿namespace GeoTaggr.Core.Tags
+﻿using GeoTaggr.Core.Maps;
+
+namespace GeoTaggr.Core.Tags
 {
     public class Tag(int tagId, DateTime createdDate, int userId, int countryId, string name, string value,
-        double? lat, double? @long, string? url)
+        string? url, double? lat, double? @long)
     {
         public int CountryId { get; } = countryId;
 
         public DateTime CreatedDate { get; } = createdDate;        
 
         public double? Lat { get; set; } = lat;
+
+        public Coordinates? Location => Coordinates.FromLatLong(Lat, Long); 
 
         public double? Long { get; set; } = @long;
 

@@ -1,13 +1,12 @@
 ﻿using GeoTaggr.Core.Countries;
 
-namespace GeoTaggr.Services.Countries
+namespace GeoTaggr.Services.Countries;
+
+public interface ICountryService
 {
-    public interface ICountryService
-    {
-        Task<ServiceResult> AddCountryAsync(Country country);
+    Task<IReadOnlyCollection<Country>> GetCountriesAsync(CountryFilterValues filter);
 
-        Task<IReadOnlyCollection<Country>> GetCountriesAsync();
+    Task<IReadOnlyDictionary<int, Country>> GetCountryDictionaryAsync(CountryFilterValues filter);
 
-        Task<IReadOnlyDictionary<int, Country>> GetCountryDictionaryAsync();
-    }
+    Task<ServiceResult> IncludeCountryAsync(int countryId);
 }

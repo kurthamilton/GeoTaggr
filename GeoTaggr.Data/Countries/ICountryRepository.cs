@@ -7,5 +7,9 @@ namespace GeoTaggr.Data.Countries
         Task<bool> AddCountryAsync(Country country);
 
         Task<IReadOnlyCollection<Country>> GetCountriesAsync();
+
+        Task<Country?> GetCountryAsync(int countryId);
+
+        Task<bool> UpdateCountryAsync(Country country);
     }
 }

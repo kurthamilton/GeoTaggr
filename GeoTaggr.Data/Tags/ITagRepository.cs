@@ -6,6 +6,10 @@ namespace GeoTaggr.Data.Tags
     {
         Task<bool> AddTagAsync(Tag tag);
 
+        Task<bool> DeleteTagAsync(Tag tag);
+
+        Task<Tag?> GetTagAsync(int tagId);
+
         Task<IReadOnlyCollection<Tag>> GetTagsAsync(TagFilter filter);
     }
 }

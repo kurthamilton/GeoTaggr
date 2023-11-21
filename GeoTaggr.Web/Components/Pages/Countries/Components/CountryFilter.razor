@@ -1,0 +1,32 @@
+@using GeoTaggr.Web.Components.Shared.Forms.Checkboxes
+@using GeoTaggr.Services.Countries
+
+<div class="d-flex">
+    <div>
+        <GtgrCheckbox 
+            Label="Show all"
+            OnChange="@OnShowAllChanged">
+        </GtgrCheckbox>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public EventCallback<CountryFilterValues> OnChange { get; set; }
+
+    private bool ShowAll { get; set; }
+
+    private async Task OnShowAllChanged(bool showAll)
+    {
+        ShowAll = showAll;
+        await TriggerChangeAsync();
+    }
+
+    private async Task TriggerChangeAsync()
+    {
+        await OnChange.InvokeAsync(new CountryFilterValues
+        {
+            IncludeNoCoverage = ShowAll
+        });
+    }    
+}

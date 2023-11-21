@@ -1,35 +1,40 @@
 ﻿using GeoTaggr.Core.Countries;
 using GeoTaggr.Data.Countries;
 
-namespace GeoTaggr.Services.Countries
+namespace GeoTaggr.Services.Countries;
+
+public class CountryService(ICountryRepository countryRepository) : ICountryService
 {
-    public class CountryService(ICountryRepository countryRepository) : ICountryService
+    public async Task<IReadOnlyCollection<Country>> GetCountriesAsync(CountryFilterValues filter)
     {
-        public async Task<ServiceResult> AddCountryAsync(Country country)
-        {
-            IReadOnlyCollection<Country> countries = await GetCountriesAsync();
-            if (countries.Any(x => string.Equals(x.Name, country.Name, StringComparison.OrdinalIgnoreCase)))
-            {
-                return ServiceResult.Failure("Country name already exists");
-            }
+        IReadOnlyCollection<Country> countries = await countryRepository.GetCountriesAsync();
 
-            bool success = await countryRepository.AddCountryAsync(country);
-            return success
-                ? ServiceResult.Successful("Country added")
-                : ServiceResult.Failure("Error adding country");
+        return countries
+            .Where(filter.IsMatch)
+            .ToArray();
+    }
+
+    public async Task<IReadOnlyDictionary<int, Country>> GetCountryDictionaryAsync(CountryFilterValues filter)
+    {
+        IReadOnlyCollection<Country> countries = await GetCountriesAsync(filter);
+        return countries
+            .ToDictionary(x => x.CountryId)
+            .AsReadOnly();
+    }
+
+    public async Task<ServiceResult> IncludeCountryAsync(int countryId)
+    {
+        Country? country = await countryRepository.GetCountryAsync(countryId);
+        if (country == null) 
+        {
+            return ServiceResult.Failure("Country not found");
         }
 
-        public Task<IReadOnlyCollection<Country>> GetCountriesAsync()
-        {
-            return countryRepository.GetCountriesAsync();
-        }
+        country.HasCoverage = true;
 
-        public async Task<IReadOnlyDictionary<int, Country>> GetCountryDictionaryAsync()
-        {
-            IReadOnlyCollection<Country> countries = await GetCountriesAsync();
-            return countries
-                .ToDictionary(x => x.CountryId)
-                .AsReadOnly();
-        }
+        bool success = await countryRepository.UpdateCountryAsync(country);
+        return success
+            ? ServiceResult.Successful("Country updated")
+            : ServiceResult.Failure("Error updating country");
     }
 }

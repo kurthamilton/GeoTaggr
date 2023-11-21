@@ -1,142 +1,54 @@
 ﻿using System.Data;
-using System.Data.SQLite;
+using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 
 namespace GeoTaggr.Data.Sqlite
 {
     public abstract class SqliteRepository
     {
-        private readonly SqliteRepositorySettings _settings;
+        private readonly GeoTaggrContext _context;
 
-        protected SqliteRepository(SqliteRepositorySettings settings) 
+        protected SqliteRepository(GeoTaggrContext context) 
         {
-            _settings = settings;
+            _context = context;
         }        
 
-        protected Task<bool> AddOneAsync<T>(T entity, IEntityMapper<T> mapper)
+        protected async Task<bool> AddOneAsync<T>(T entity) where T : class
         {
-            return ExecuteQueryAsync(mapper.InsertSql, mapper.InsertParameters(entity));
+            _context.Set<T>().Add(entity);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        protected Task<bool> ExecuteQueryAsync(string sql, IEnumerable<IDataParameter> parameters)
+        protected async Task<bool> DeleteOneAsync<T>(T entity) where T : class
         {
-            using (IDbConnection connection = GetConnection())
-            {
-                connection.Open();
-
-                using (IDbTransaction transaction = connection.BeginTransaction())
-                {
-                    using (IDbCommand command = GetCommand(connection, sql, parameters, transaction))
-                    {
-                        command.CommandType = CommandType.Text;
-
-                        try
-                        {
-                            command.ExecuteNonQuery();
-                            transaction.Commit();
-                            return Task.FromResult(true);
-                        }
-                        catch
-                        {
-                            transaction.Rollback();
-                            return Task.FromResult(false);
-                        }
-                    }
-                }
-            }
-        }        
-
-        protected Task<IReadOnlyCollection<T>> ReadManyAsync<T>(IEntityMapper<T> mapper)
-        {
-            string sql =
-                $"SELECT {mapper.SelectColumnSql} " +
-                $"FROM {mapper.TableName} ";
-
-            return ReadManyAsync(sql, Array.Empty<IDataParameter>(), mapper);
+            _context.Set<T>().Remove(entity);
+            return await _context.SaveChangesAsync() > 0;
         }
 
-        protected Task<IReadOnlyCollection<T>> ReadManyAsync<T>(string sql, IEnumerable<IDataParameter> parameters,
-            IEntityMapper<T> mapper)
+        protected async Task<IReadOnlyCollection<T>> ReadManyAsync<T>(Expression<Func<T, bool>>? filter = null) where T : class
         {
-            using (IDbConnection conn = GetConnection())
-            {
-                using (IDbCommand cmd = GetCommand(conn, sql, parameters))
-                {
-                    conn.Open();
-
-                    IDataReader reader = cmd.ExecuteReader();
-
-                    List<T> entities = new();
-                    if (!reader.Read())
-                    {
-                        return Task.FromResult((IReadOnlyCollection<T>)entities);
-                    }
-                    
-                    do
-                    {
-                        T entity = mapper.Map(reader);
-                        entities.Add(entity);
-                    } while (reader.Read());
-
-                    return Task.FromResult((IReadOnlyCollection<T>)entities);
-                }
-            }
+            return await GetQuery(filter).ToArrayAsync();
         }
 
-        protected Task<T?> ReadSingleAsync<T>(string sql, IEnumerable<IDataParameter> parameters, 
-            IEntityMapper<T> mapper)
+        protected Task<T?> ReadSingleAsync<T>(Expression<Func<T, bool>>? filter = null) where T : class
         {
-            using (IDbConnection conn = GetConnection())
-            {
-                using (IDbCommand cmd = GetCommand(conn, sql, parameters))
-                {
-                    conn.Open();
-
-                    T? result = default;
-
-                    try
-                    {                        
-                        IDataReader reader = cmd.ExecuteReader();
-                        if (reader.Read())
-                        {
-                            result = mapper.Map(reader);
-                        }
-
-                        return Task.FromResult(result);
-                    }
-                    catch
-                    {
-                        return Task.FromResult(result);
-                    }
-                }
-            }
+            return GetQuery(filter).FirstOrDefaultAsync();
         }
 
-        private IDbCommand GetCommand(IDbConnection conn, string sql, 
-            IEnumerable<IDataParameter> parameters)
+        protected async Task<bool> UpdateOneAsync<T>(T entity) where T : class
         {
-            IDbCommand cmd = new SQLiteCommand();
-            cmd.Connection = conn;
-            cmd.CommandText = sql;
-            
-            foreach (IDataParameter parameter in parameters)
+            return await _context.SaveChangesAsync() > 0;
+        }
+
+        private IQueryable<T> GetQuery<T>(Expression<Func<T, bool>>? filter = null) where T : class
+        {
+            IQueryable<T> query = _context.Set<T>();
+            if (filter != null)
             {
-                cmd.Parameters.Add(parameter);
+                query = query.Where(filter);
             }
 
-            return cmd;
-        }
-
-        private IDbCommand GetCommand(IDbConnection conn, string sql, 
-            IEnumerable<IDataParameter> parameters, IDbTransaction transaction)
-        {
-            IDbCommand cmd = GetCommand(conn, sql, parameters);
-            cmd.Transaction = transaction;
-            return cmd;
-        }
-
-        private IDbConnection GetConnection()
-        {
-            return new SQLiteConnection(_settings.ConnectionString);
+            return query;
         }
     }
 }

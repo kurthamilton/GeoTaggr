@@ -1,5 +1,5 @@
 ﻿@page "/countries"
-@inherits GeoTaggrPage
+@inherits GtgrPage
 @using GeoTaggr.Core.Countries
 @using GeoTaggr.Services.Countries
 
@@ -8,21 +8,56 @@
     return;
 }
 
-@foreach (Country country in Countries)
-{
-    <div>
-        @country.Name
-    </div>
-}
+<div class="mt-3 mb-3">
+    <CountryFilter OnChange="@OnFiltersChanged">        
+    </CountryFilter>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-5">
+    @foreach (Country country in Countries)
+    {
+        <div class="col mt-3 h-100">
+            <CountryCard 
+                Country="@country"
+                OnInclude="@OnCountryIncluded">
+            </CountryCard>
+        </div>
+    }
+</div>
 
 @inject ICountryService CountryService
-    @code {
-    private IReadOnlyCollection<Country>? Countries { get; set; }
+@code {
+    private IReadOnlyCollection<Country>? Countries { get; set; }    
+
+    private CountryFilterValues Filter { get; set; } = new CountryFilterValues();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
 
-        Countries = await CountryService.GetCountriesAsync();
+        await LoadCountriesAsync();
+    }
+
+    private async Task LoadCountriesAsync()
+    {
+        Countries = null;
+        Countries = await CountryService.GetCountriesAsync(Filter);
+    }
+
+    private async Task OnCountryIncluded(Country? country)
+    {
+        if (country == null)
+        {
+            return;
+        }
+
+        await CountryService.IncludeCountryAsync(country.CountryId);
+        country.HasCoverage = true;
+    }
+
+    private async Task OnFiltersChanged(CountryFilterValues filter)
+    {
+        Filter = filter;
+        await LoadCountriesAsync();
     }
 }
