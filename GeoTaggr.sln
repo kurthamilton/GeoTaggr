@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34309.116
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoTaggr.Web", "GeoTaggr.Web\GeoTaggr.Web.csproj", "{D8C0F0A5-97F8-415A-81C1-5C80D9CC802E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoTaggr.Core", "GeoTaggr.Core\GeoTaggr.Core.csproj", "{FBB66398-422B-4189-AF6C-BF53DC846A37}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoTaggr.Data", "GeoTaggr.Data\GeoTaggr.Data.csproj", "{438B565F-6DCA-437F-8128-196EBC1F1D1E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoTaggr.Data.Sqlite", "GeoTaggr.Data.Sqlite\GeoTaggr.Data.Sqlite.csproj", "{2DC93FB0-15C4-4DF2-BEEE-05C9FCD06E53}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoTaggr.Infrastructure", "GeoTaggr.Infrastructure\GeoTaggr.Infrastructure.csproj", "{7EE14D92-F30A-4D2F-9D85-6F0D456E8EDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoTaggr.Services", "GeoTaggr.Services\GeoTaggr.Services.csproj", "{23DA5752-E51F-4A80-AC1D-E3F70088E720}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{2BFAA30C-A81A-433B-8420-9F6C88867C63}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		run.bat = run.bat
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D8C0F0A5-97F8-415A-81C1-5C80D9CC802E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8C0F0A5-97F8-415A-81C1-5C80D9CC802E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8C0F0A5-97F8-415A-81C1-5C80D9CC802E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8C0F0A5-97F8-415A-81C1-5C80D9CC802E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FBB66398-422B-4189-AF6C-BF53DC846A37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FBB66398-422B-4189-AF6C-BF53DC846A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FBB66398-422B-4189-AF6C-BF53DC846A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FBB66398-422B-4189-AF6C-BF53DC846A37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{438B565F-6DCA-437F-8128-196EBC1F1D1E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{438B565F-6DCA-437F-8128-196EBC1F1D1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{438B565F-6DCA-437F-8128-196EBC1F1D1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{438B565F-6DCA-437F-8128-196EBC1F1D1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DC93FB0-15C4-4DF2-BEEE-05C9FCD06E53}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DC93FB0-15C4-4DF2-BEEE-05C9FCD06E53}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DC93FB0-15C4-4DF2-BEEE-05C9FCD06E53}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DC93FB0-15C4-4DF2-BEEE-05C9FCD06E53}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7EE14D92-F30A-4D2F-9D85-6F0D456E8EDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7EE14D92-F30A-4D2F-9D85-6F0D456E8EDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7EE14D92-F30A-4D2F-9D85-6F0D456E8EDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7EE14D92-F30A-4D2F-9D85-6F0D456E8EDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{23DA5752-E51F-4A80-AC1D-E3F70088E720}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{23DA5752-E51F-4A80-AC1D-E3F70088E720}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{23DA5752-E51F-4A80-AC1D-E3F70088E720}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{23DA5752-E51F-4A80-AC1D-E3F70088E720}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {14C56224-9DF6-471E-958D-55D5691320BC}
+	EndGlobalSection
+EndGlobal

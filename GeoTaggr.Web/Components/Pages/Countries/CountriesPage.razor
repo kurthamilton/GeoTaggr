@@ -1,0 +1,28 @@
+﻿@page "/countries"
+@inherits GeoTaggrPage
+@using GeoTaggr.Core.Countries
+@using GeoTaggr.Services.Countries
+
+@if (Countries == null)
+{
+    return;
+}
+
+@foreach (Country country in Countries)
+{
+    <div>
+        @country.Name
+    </div>
+}
+
+@inject ICountryService CountryService
+    @code {
+    private IReadOnlyCollection<Country>? Countries { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Countries = await CountryService.GetCountriesAsync();
+    }
+}
