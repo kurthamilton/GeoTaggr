@@ -5,7 +5,7 @@
     return;
 }
 
-<div class="dropdown-menu @AlignmentClass">
+<div class="dropdown-menu @AlignmentClass @(Show ? "show" : null)">
     @foreach (SelectOption option in Options)
     {
         <div class="dropdown-item" @onclick="@(() => OnOptionSelected(option))">
@@ -23,6 +23,9 @@
 
     [Parameter]
     public IReadOnlyCollection<SelectOption>? Options { get; set; }
+
+    [Parameter]
+    public bool Show { get; set; }
 
     private string? AlignmentClass => Alignment switch
     {

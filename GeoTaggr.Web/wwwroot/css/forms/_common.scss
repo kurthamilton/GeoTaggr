@@ -1,8 +1,13 @@
-.form-label {
-    &.required {
-        &:after {
-            content: ' *';
-            color: var(--gtgr-danger);
+// no option to configure the mud label class, so override the existing selector
+.mud-input-control {
+    &.mud-input-required {
+        & > .mud-input-control-input-container {
+            & > .mud-input-label {
+                &:after {
+                    content: " *";
+                    color: var(--gtgr-color-danger);
+                }
+            }
         }
     }
 }

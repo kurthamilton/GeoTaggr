@@ -29,8 +29,18 @@
 
     }
 
+    async function getCountryCode(options) {
+        const geocoder = new google.maps.Geocoder(); 
+        const response = await geocoder.geocode({ location: { lat: options.lat, lng: options.long } });        
+
+        const addressComponents = response.results[0]?.address_components;
+        const countryComponent = addressComponents.find(x => x.types.includes('country'));
+        return countryComponent?.short_name;
+    }
+
     window.gtgr = window.gtgr || {};
     window.gtgr.maps = {
-        init: init
+        init: init,
+        getCountryCode: getCountryCode
     };
 })();

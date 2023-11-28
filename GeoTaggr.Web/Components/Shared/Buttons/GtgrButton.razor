@@ -1,11 +1,18 @@
-<button 
-    class="btn @TypeClass @SizeClass @Class" 
-    type="button" 
-    @attributes="@Attributes"
-    @onclick="@OnButtonClicked">
-    @ChildContent
-</button>
+@inherits GtgrComponentBase
+@using MudSize = MudBlazor.Size
 
+<MudButton 
+    UserAttributes="@Attributes?.ToDictionary()"
+    Class="@Class"
+    Color="@ButtonColor"
+    Href="@Href"
+    Size="@ButtonSize"
+    Variant="@ButtonVariant"
+    OnClick="@OnButtonClicked">
+    @ChildContent
+</MudButton>
+
+@inject IDialogService DialogService
 @inject IJSRuntime JSRuntime
 @code {
     [Parameter]
@@ -21,6 +28,9 @@
     public string? Confirm { get; set; }
 
     [Parameter]
+    public string? Href { get; set; }
+
+    [Parameter]
     public EventCallback OnClick { get; set; }
 
     [Parameter]
@@ -29,30 +39,32 @@
     [Parameter]
     public GtgrButtonType Type { get; set; }
 
-    private string? SizeClass => Size switch
+    private Color ButtonColor => Type switch
     {
-        GtgrButtonSize.Small => "btn-sm",
-        _ => null
+        GtgrButtonType.Primary => Color.Primary,
+        GtgrButtonType.OutlinePrimary => Color.Primary,
+        GtgrButtonType.Secondary => Color.Secondary,
+        GtgrButtonType.OutlineSecondary => Color.Secondary,
+        _ => Color.Inherit
     };
 
-    private string? TypeClass => Type switch
+    private MudSize ButtonSize => Size.ToMudSize();
+
+    private Variant ButtonVariant => Type switch
     {
-        GtgrButtonType.Primary => "btn-primary",
-        GtgrButtonType.OutlinePrimary => "btn-outline-primary",
-        GtgrButtonType.Secondary => "btn-secondary",
-        GtgrButtonType.OutlineSecondary => "btn-outline-secondary",
-        _ => null
+        GtgrButtonType.Primary => Variant.Filled,
+        GtgrButtonType.OutlinePrimary => Variant.Outlined,
+        GtgrButtonType.Secondary => Variant.Filled,
+        GtgrButtonType.OutlineSecondary => Variant.Outlined,
+        _ => Variant.Text
     };
 
     private async Task OnButtonClicked()
     {
-        if (!string.IsNullOrEmpty(Confirm))
+        bool confirm = await ConfirmAsync("Delete", Confirm, "Delete");
+        if (!confirm)
         {
-            bool result = await JSRuntime.InvokeAsync<bool>("confirm", Confirm);
-            if (!result)
-            {
-                return;
-            }
+            return;
         }
 
         await OnClick.InvokeAsync();

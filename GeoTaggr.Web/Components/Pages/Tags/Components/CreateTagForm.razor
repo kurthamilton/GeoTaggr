@@ -1,4 +1,5 @@
-﻿@using GeoTaggr.Core.Maps
+﻿@using GeoTaggr.Core.Countries
+@using GeoTaggr.Core.Maps
 @using GeoTaggr.Services.Maps
 @using GeoTaggr.Services.Tags
 @using GeoTaggr.Web.Components.Shared.Buttons
@@ -12,10 +13,10 @@
     {
         <div class="mb-3">
             <GtgrSelect
-                Placeholder="Select country..."
                 Label="Country"
                 Options="@CountryOptions"
                 Required="true"
+                Value="@SelectedCountry"
                 OnChange="@OnCountrySelected">
             </GtgrSelect>
         </div>
@@ -23,64 +24,53 @@
 
     @if (TagNameOptions != null)
     {        
-        <div class="mb-3">
-            <GtgrFormLabel
-                For="tag-name"
-                Text="Name"
-                Required="true">
-            </GtgrFormLabel>
+        <div class="mb-3">            
             <GtgrInputGroup>
-                <GtgrTextbox
+                <GtgrTextInput
                     Id="tag-name"
+                    Label="Name"
                     Required="true"
                     Value="@TagInput.Name"
                     OnChange="@(x => TagInput.Name = x)">
-                </GtgrTextbox>
-                <GtgrDropdownButton
-                    Type="GtgrButtonType.OutlineSecondary">
-                </GtgrDropdownButton>
-                <GtgrDropdownMenu 
-                    Alignment="GtgrMenuAlignment.Right"
-                    Options="@TagNameOptions"
-                    OnSelect="@OnTagNameSelected">
-                </GtgrDropdownMenu>                
+                </GtgrTextInput>                
             </GtgrInputGroup>                        
         </div>
     }
 
     <div class="mb-3">
-        <GtgrTextbox
+        <GtgrTextInput
             Label="Value"
             Required="true"
             OnChange="@(x => TagInput.Value = x)">
-        </GtgrTextbox>
+        </GtgrTextInput>
     </div>
 
     <div class="mb-3">
-        <GtgrTextbox
+        <GtgrTextInput
             HelpText="Use the Google Maps streetview URL"
             Label="Url"
             OnChange="@OnUrlChanged">
-        </GtgrTextbox>
+        </GtgrTextInput>
     </div>
 
-    <div class="row">
-        <div class="col mb-3">
-            <GtgrTextbox 
+    <MudGrid Class="mb-3">
+        <MudItem xs="6">
+            <GtgrNumberInput 
+                T="double?"
                 Label="Lat"
                 Value="@TagInput.Lat"
-                OnChange="@(x => TagInput.Lat = double.Parse(x))">
-            </GtgrTextbox>
-        </div>
-
-        <div class="col mb-3">
-            <GtgrTextbox 
+                OnChange="@(x => TagInput.Lat = x)">
+            </GtgrNumberInput>
+        </MudItem>
+        <MudItem xs="6">
+            <GtgrNumberInput 
+                T="double?"
                 Label="Long"
                 Value="@TagInput.Long"
-                OnChange="@(x => TagInput.Long = double.Parse(x))">
-            </GtgrTextbox>
-        </div>
-    </div>    
+                OnChange="@(x => TagInput.Long = x)">
+            </GtgrNumberInput>
+        </MudItem>
+    </MudGrid>
 
     <div>
         <GtgrButton
@@ -91,8 +81,12 @@
     </div>
 </form>
 
+@inject IJSRuntime JSRuntime
 @inject IMapService MapService
 @code {
+    [Parameter]
+    public IReadOnlyDictionary<int, Country>? Countries { get; set; }
+
     [Parameter]
     public IReadOnlyCollection<SelectOption>? CountryOptions { get; set; }
 
@@ -101,6 +95,8 @@
 
     [Parameter]
     public IReadOnlyCollection<string>? TagNames { get; set; }
+
+    private string? SelectedCountry { get; set; }
 
     private TagInput TagInput { get; } = new();
 
@@ -116,14 +112,16 @@
     }
 
     private void OnCountrySelected(string? countryId)
-    {
+    {        
         if (int.TryParse(countryId, out int parsed))
         {
             TagInput.CountryId = parsed;
+            SelectedCountry = countryId;
         }
         else
         {
             TagInput.CountryId = null;
+            SelectedCountry = null;
         }
     }
 
@@ -137,7 +135,7 @@
         TagInput.Name = option.Text;
     }
 
-    private void OnUrlChanged(string? url)
+    private async void OnUrlChanged(string? url)
     {
         TagInput.Url = url;
 
@@ -145,6 +143,17 @@
         {
             TagInput.Lat = coordinates.Lat;
             TagInput.Long = coordinates.Long;
+
+            string code = await JSRuntime.InvokeAsync<string>("gtgr.maps.getCountryCode", new { lat = TagInput.Lat, @long = TagInput.Long });
+            Country? country = Countries
+                ?.Values
+                .FirstOrDefault(x => string.Equals(x.IsoCode2, code, StringComparison.InvariantCultureIgnoreCase));
+            if (country != null)
+            {
+                SelectedCountry = country.CountryId.ToString();
+                TagInput.CountryId = country.CountryId;
+                await InvokeAsync(StateHasChanged);
+            }
         }
     }
 }

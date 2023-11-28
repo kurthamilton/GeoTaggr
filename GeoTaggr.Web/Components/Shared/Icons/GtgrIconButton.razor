@@ -1,0 +1,59 @@
+﻿@inherits GtgrIconBase
+@using MudSize = MudBlazor.Size
+
+@if (!string.IsNullOrEmpty(HoverIcon))
+{
+    <MudTooltip Text="@Tooltip">
+        <span class="hover-toggle">
+            <MudIconButton 
+                Icon="@TypeIcon" 
+                Class="hover-hide" 
+                Color="@IconColor" 
+                Size="@ButtonSize"
+                OnClick="@OnButtonClicked">
+            </MudIconButton>
+            <MudIconButton 
+                Icon="@HoverIcon" 
+                Class="hover-show" 
+                Color="@IconColor" 
+                Size="@ButtonSize"
+                OnClick="@OnButtonClicked">
+            </MudIconButton>
+        </span>
+    </MudTooltip>
+}
+else
+{
+    <MudTooltip Text="@Tooltip">
+        <MudIconButton 
+            Icon="@TypeIcon" 
+            Color="@IconColor" 
+            Size="@ButtonSize"
+            OnClick="@OnButtonClicked">
+        </MudIconButton>
+    </MudTooltip>
+}
+
+@code {
+    [Parameter]
+    public string? Confirm { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public GtgrButtonSize Size { get; set; }
+
+    private MudSize ButtonSize => Size.ToMudSize();
+
+    private async Task OnButtonClicked()
+    {
+        bool confirm = await ConfirmAsync("Delete", Confirm, "Delete");
+        if (!confirm)
+        {
+            return;
+        }
+
+        await OnClick.InvokeAsync();
+    }
+}

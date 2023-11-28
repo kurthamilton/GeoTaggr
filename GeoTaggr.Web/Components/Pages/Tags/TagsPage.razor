@@ -14,24 +14,27 @@
     return;
 }
 
-<div class="row">
-    <div class="col-md-9">
+<MudGrid>
+    <MudItem xs="12" md="9">
         <GtgrMap Markers="@MapMarkers"></GtgrMap>
-    </div>
-    <div class="col-md-3">
+    </MudItem>
+    <MudItem xs="12" md="3">
         <CreateTagForm
+            Countries="@Countries"
             CountryOptions="@CountryOptions"
             OnSubmit="@OnTagSubmitted"
             TagNames="@TagNames">
         </CreateTagForm>
-    </div>    
-</div>
+    </MudItem>
+</MudGrid>
 
-<TagsTable
-    Countries="@Countries"
-    OnDelete="@OnTagDelete"
-    Tags="@Tags">
-</TagsTable>
+<div class="mt-5">
+    <TagsTable
+        Countries="@Countries"
+        OnDelete="@OnTagDelete"
+        Tags="@Tags">
+    </TagsTable>
+</div>
 
 @inject ICountryService CountryService
 @inject ITagService TagService

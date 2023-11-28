@@ -19,6 +19,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="MudBlazor" Version="6.11.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\GeoTaggr.Core\GeoTaggr.Core.csproj" />
     <ProjectReference Include="..\GeoTaggr.Data\GeoTaggr.Data.csproj" />
     <ProjectReference Include="..\GeoTaggr.Infrastructure\GeoTaggr.Infrastructure.csproj" />

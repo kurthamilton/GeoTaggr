@@ -3,13 +3,14 @@
 @using GeoTaggr.Core.Tags
 @using GeoTaggr.Web.Components.Shared.Buttons
 @using GeoTaggr.Web.Components.Shared.Icons
+@using GeoTaggr.Web.Components.Shared.Tables
 
 @if (Any.IsNull(Countries, Tags))
 {
     return;
 }
 
-<table class="table table-striped">
+<GtgrTable>
     <thead>
         <tr>
             <th>Country</th>
@@ -44,16 +45,17 @@
                     }
                 </td>
                 <td>
-                    <GtgrButtonIcon
+                    <GtgrIconButton 
+                        Type="@GtgrIconType.Delete"
+                        Size="GtgrButtonSize.Small"
                         Confirm="Are you sure you want to delete this tag?"
-                        OnClick="@(() => OnDelete.InvokeAsync(tag.TagId))"
-                        Type="@GtgrIconType.Delete">
-                    </GtgrButtonIcon>
+                        OnClick="@(() => OnDelete.InvokeAsync(tag.TagId))">
+                    </GtgrIconButton>
                 </td>
             </tr>
         }
     </tbody>
-</table>
+</GtgrTable>
 
 @code {
     [Parameter]

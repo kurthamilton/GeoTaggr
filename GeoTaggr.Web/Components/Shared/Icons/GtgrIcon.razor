@@ -1,28 +1,17 @@
-﻿@if (!string.IsNullOrEmpty(HoverClass))
+﻿@inherits GtgrIconBase
+
+@if (!string.IsNullOrEmpty(HoverIcon))
 {
-    <span class="hover-toggle">
-        <i class="bi @TypeClass hover-hide"></i>
-        <i class="bi @HoverClass hover-show"></i>
-    </span>
+    <MudTooltip Text="@Tooltip">
+        <span class="hover-toggle">
+            <MudIcon Icon="@TypeIcon" Class="hover-hide" Color="@IconColor"></MudIcon>
+            <MudIcon Icon="@HoverIcon" Class="hover-show" Color="@IconColor"></MudIcon>
+        </span>
+    </MudTooltip>
 }
 else
 {
-    <i class="bi @TypeClass"></i>
-}
-
-@code {
-    [Parameter]
-    public GtgrIconType Type { get; set; }
-
-    private string? TypeClass => Type switch
-    {
-        GtgrIconType.Delete => "bi-x-circle",
-        _ => null
-    };
-
-    private string? HoverClass => Type switch
-    {
-        GtgrIconType.Delete => "bi-x-circle-fill",
-        _ => null
-    };
+    <MudTooltip Text="@Tooltip">
+        <MudIcon Icon="@TypeIcon" Color="@IconColor" Title="@Tooltip"></MudIcon>
+    </MudTooltip>
 }

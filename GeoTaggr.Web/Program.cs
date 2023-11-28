@@ -1,6 +1,7 @@
 using GeoTaggr.Infrastructure;
 using GeoTaggr.Web.Common;
 using GeoTaggr.Web.Components;
+using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -10,6 +11,8 @@ IServiceCollection services = builder.Services;
 services
     .AddRazorComponents()
     .AddInteractiveServerComponents();
+
+services.AddMudServices();
 
 IDependencyContainer container = new DependencyContainer(services);
 DependencyConfig.RegisterDependencies(container, builder.Configuration);

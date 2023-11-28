@@ -1,31 +1,25 @@
 ﻿@inherits GtgrFormComponentBase
+@using GeoTaggr.Web.Components.Shared.Dropdowns
 
 @if (Options == null)
 {
     return;
 }
 
-<GtgrFormLabel
-    For="@(Id ?? AutoId)"
-    Required="@Required"
-    Text="@Label">
-</GtgrFormLabel>
-
-<select 
-    class="form-select" 
-    id="@(Id ?? AutoId)"
-    @attributes="@ValidationAttributes" 
-    @onchange="@OnSelectChange">
-    @if (!string.IsNullOrEmpty(Placeholder))
-    {
-        <option value="">@Placeholder</option>    
-    }
-
+<MudAutocomplete 
+    T="SelectOption" 
+    Label="@Label"     
+    Required="@Required" 
+    SearchFunc="@SearchAsync"
+    Value="@SelectedOption"
+    ValueChanged="@OnOptionSelected">
     @foreach (SelectOption option in Options)
     {
-        <option value="@option.Key">@option.Text</option>
-    }    
-</select>
+        <MudSelectItem 
+            Value="@option">
+        </MudSelectItem>
+    }
+</MudAutocomplete>
 
 @code {
     [Parameter]
@@ -35,11 +29,56 @@
     public IReadOnlyCollection<SelectOption>? Options { get; set; }
 
     [Parameter]
-    public string? Placeholder { get; set; }
+    public string? Value { get; set; }
+
+    private SelectOption? SelectedOption { get; set; }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        if (Options != null && !string.IsNullOrEmpty(Value))
+        {
+            SelectOption? option = Options
+                ?.FirstOrDefault(x => x.Key.Equals(Value, StringComparison.InvariantCultureIgnoreCase));
+            if (option != null)
+            {
+                SelectedOption = option;
+            }
+        }
+    }
+
+    private Task OnOptionSelected(SelectOption? option)
+    {
+        SelectedOption = option;
+        return Task.CompletedTask;
+    }
 
     private async Task OnSelectChange(ChangeEventArgs e)
     {
         string? value = e.Value?.ToString();
         await OnChange.InvokeAsync(value);
+    }
+
+    private IEnumerable<SelectOption> Search(string? value)
+    {
+        if (Options == null)
+        {
+            return Enumerable.Empty<SelectOption>();
+        }
+
+        if (string.IsNullOrEmpty(value))
+        {
+            return Options;
+        }
+
+        return Options
+            .Where(x => x.Text.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private Task<IEnumerable<SelectOption>> SearchAsync(string? value)
+    {
+        IEnumerable<SelectOption> options = Search(value);
+        return Task.FromResult(options);
     }
 }

@@ -1,0 +1,24 @@
+﻿@typeparam T
+@inherits GtgrFormComponentBase
+
+<MudNumericField
+    T="@T"
+    Label="@Label"
+    Required="@Required"
+    Value="@Value"
+    HelperText="@HelpText">
+</MudNumericField>
+
+@code {    
+    [Parameter]
+    public EventCallback<T?> OnChange { get; set; }
+    
+    [Parameter]
+    public T? Value { get; set; }    
+
+    private async Task OnInputChanged(T? value)
+    {
+        Value = value;
+        await OnChange.InvokeAsync(value);
+    }    
+}

@@ -1,16 +1,19 @@
 ﻿@inherits LayoutComponentBase
+@using GeoTaggr.Web.Components.Shared.Layout
 
-<div class="page">
-    <header>
-        <NavMenu />
-    </header>
+<MudThemeProvider />
+<MudDialogProvider />
+<MudSnackbarProvider />
 
-    <main>
-        <article class="content container p-3">
+<MudLayout>
+    <MainHeader></MainHeader>
+
+    <MudMainContent>
+        <GtgrContainer Class="main-content">
             @Body
-        </article>
-    </main>
-</div>
+        </GtgrContainer>
+    </MudMainContent>
+</MudLayout>
 
 <div id="blazor-error-ui">
     An unhandled error has occurred.

@@ -5,5 +5,9 @@
         public string Key { get; set; } = key;
 
         public string Text { get; set; } = text;
+
+        public override int GetHashCode() => Text.GetHashCode();
+
+        public override string ToString() => Text;
     }
 }

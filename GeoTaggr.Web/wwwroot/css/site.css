@@ -1,5 +1,15 @@
-﻿:root {
-  --gtgr-danger: var(--bs-danger);
+﻿.btn-icon {
+  display: flex;
+  align-items: center;
+  min-width: 0 !important;
+}
+
+.hover-toggle {
+  display: flex;
+}
+
+:root {
+  --gtgr-color-danger: var(--mud-palette-error-darken);
 }
 
 #blazor-error-ui {
@@ -38,9 +48,13 @@
   display: none;
 }
 
-.form-label.required:after {
+.main-content {
+  padding-top: 1rem;
+}
+
+.mud-input-control.mud-input-required > .mud-input-control-input-container > .mud-input-label:after {
   content: " *";
-  color: var(--gtgr-danger);
+  color: var(--gtgr-color-danger);
 }
 
 .dropdown-item {
