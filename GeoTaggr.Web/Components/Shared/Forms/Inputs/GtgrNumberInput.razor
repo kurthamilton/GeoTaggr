@@ -6,15 +6,25 @@
     Label="@Label"
     Required="@Required"
     Value="@Value"
-    HelperText="@HelpText">
+    HelperText="@HelpText"
+    Max="@Max"
+    Min="@Min"
+    Clearable="true"
+    HideSpinButtons="true">
 </MudNumericField>
 
-@code {    
+@code {
+    [Parameter]
+    public T? Max { get; set; }
+
+    [Parameter]
+    public T? Min { get; set; }
+
     [Parameter]
     public EventCallback<T?> OnChange { get; set; }
-    
+
     [Parameter]
-    public T? Value { get; set; }    
+    public T? Value { get; set; }        
 
     private async Task OnInputChanged(T? value)
     {

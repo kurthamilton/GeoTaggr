@@ -1,0 +1,14 @@
+﻿<MudLink Href="@Href" Target="@Target">
+    @ChildContent
+</MudLink>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Href { get; set; }    
+
+    [Parameter]
+    public string? Target { get; set; }
+}

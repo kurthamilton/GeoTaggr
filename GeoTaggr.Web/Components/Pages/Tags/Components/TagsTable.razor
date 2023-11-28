@@ -3,6 +3,7 @@
 @using GeoTaggr.Core.Tags
 @using GeoTaggr.Web.Components.Shared.Buttons
 @using GeoTaggr.Web.Components.Shared.Icons
+@using GeoTaggr.Web.Components.Shared.Links
 @using GeoTaggr.Web.Components.Shared.Tables
 
 @if (Any.IsNull(Countries, Tags))
@@ -32,7 +33,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(tag.Url))
                     {
-                        <a href="@tag.Url" target="_blank">
+                        <GtgrLink Href="@tag.Url" Target="_blank">
                             @if (tag.Location != null)
                             {
                                 @tag.Location.ToString()
@@ -41,7 +42,7 @@
                             {
                                 @:Location
                             }
-                        </a>
+                        </GtgrLink>
                     }
                 </td>
                 <td>

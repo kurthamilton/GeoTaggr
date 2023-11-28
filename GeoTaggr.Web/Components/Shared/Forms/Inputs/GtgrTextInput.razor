@@ -6,15 +6,23 @@
     Required="@Required"
     Value="@Value"
     ValueChanged="@OnInputChanged"
-    HelperText="@HelpText">
+    HelperText="@HelpText"
+    DebounceInterval="200"
+    OnDebounceIntervalElapsed="@OnDebounceIntervalElapsed">
 </MudTextField>
 
-@code {    
+@code {
     [Parameter]
     public EventCallback<string?> OnChange { get; set; }
-    
+
     [Parameter]
     public string? Value { get; set; }    
+
+    private async Task OnDebounceIntervalElapsed(string value)
+    {
+        Value = value;
+        await OnChange.InvokeAsync(value);
+    }
 
     private async Task OnInputChanged(string? value)
     {

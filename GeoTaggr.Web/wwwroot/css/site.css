@@ -48,8 +48,13 @@
   display: none;
 }
 
-.main-content {
-  padding-top: 1rem;
+:root {
+  --gtgr-spacing: 1rem;
+}
+
+.gtgr-spacer-y {
+  margin-top: var(--gtgr-spacing);
+  margin-bottom: var(--gtgr-spacing);
 }
 
 .mud-input-control.mud-input-required > .mud-input-control-input-container > .mud-input-label:after {
