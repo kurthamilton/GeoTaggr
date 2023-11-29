@@ -1,14 +1,19 @@
+@using GeoTaggr.Web.Components.Shared.Cards
 @using GeoTaggr.Web.Components.Shared.Forms.Checkboxes
 @using GeoTaggr.Services.Countries
 
-<div class="d-flex">
-    <div>
-        <GtgrCheckbox 
-            Label="Show all"
-            OnChange="@OnShowAllChanged">
-        </GtgrCheckbox>
-    </div>
-</div>
+<GtgrCard Outlined="true">
+    <Content>
+        <div class="d-flex">
+            <div>
+                <GtgrCheckbox 
+                    Label="Show all"
+                    OnChange="@OnShowAllChanged">
+                </GtgrCheckbox>
+            </div>
+        </div>
+    </Content>    
+</GtgrCard>
 
 @code {
     [Parameter]

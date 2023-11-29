@@ -1,0 +1,11 @@
+﻿@typeparam T
+
+<EditForm Model="@Model">
+    @ChildContent
+</EditForm>
+
+@code {
+    public RenderFragment? ChildContent { get; set; }
+
+    public T? Model { get; set; }
+}

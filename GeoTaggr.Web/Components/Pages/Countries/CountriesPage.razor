@@ -2,28 +2,31 @@
 @inherits GtgrPage
 @using GeoTaggr.Core.Countries
 @using GeoTaggr.Services.Countries
+@using GeoTaggr.Web.Components.Shared.Grids
+@using GeoTaggr.Web.Components.Shared.Layout
 
 @if (Countries == null)
 {
     return;
 }
 
-<div class="mt-3 mb-3">
-    <CountryFilter OnChange="@OnFiltersChanged">        
+<GtgrWidgetContainer>
+    <CountryFilter OnChange="@OnFiltersChanged">
     </CountryFilter>
-</div>
+</GtgrWidgetContainer>
 
-<div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 row-cols-lg-5">
+<GtgrGrid Cols="2" ColsSm="3" ColsMd="4" ColsLg="5">
     @foreach (Country country in Countries)
     {
-        <div class="col mt-3 h-100">
+        <GtgrGridItem>
             <CountryCard 
                 Country="@country"
                 OnInclude="@OnCountryIncluded">
             </CountryCard>
-        </div>
+        </GtgrGridItem>        
     }
-</div>
+</GtgrGrid>
+
 
 @inject ICountryService CountryService
 @code {

@@ -7,11 +7,12 @@
 @using GeoTaggr.Web.Components.Shared.Forms
 @using GeoTaggr.Web.Components.Shared.Forms.Inputs
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
+@using GeoTaggr.Web.Components.Shared.Grids
 
 <form>
     @if (CountryOptions != null)
     {
-        <div class="mb-3">
+        <GtgrFormGroup>
             <GtgrSelect
                 Label="Country"
                 Options="@CountryOptions"
@@ -19,12 +20,12 @@
                 Value="@SelectedCountry"
                 OnChange="@OnCountrySelected">
             </GtgrSelect>
-        </div>
+        </GtgrFormGroup>
     }    
 
     @if (TagNameOptions != null)
     {        
-        <div class="mb-3">            
+        <GtgrFormGroup>            
             <GtgrInputGroup>
                 <GtgrTextInput
                     Id="tag-name"
@@ -33,52 +34,56 @@
                     Value="@TagInput.Name"
                     OnChange="@(x => TagInput.Name = x)">
                 </GtgrTextInput>                
-            </GtgrInputGroup>                        
-        </div>
+            </GtgrInputGroup>
+        </GtgrFormGroup>
     }
 
-    <div class="mb-3">
+    <GtgrFormGroup>
         <GtgrTextInput
             Label="Value"
             Required="true"
             OnChange="@(x => TagInput.Value = x)">
         </GtgrTextInput>
-    </div>
+    </GtgrFormGroup>
 
-    <div class="mb-3">
+    <GtgrFormGroup>
         <GtgrTextInput
             HelpText="Use the Google Maps streetview URL"
             Label="Url"
             OnChange="@OnUrlChanged">
         </GtgrTextInput>
-    </div>
+    </GtgrFormGroup>
 
-    <MudGrid Class="mb-3">
-        <MudItem xs="6">
-            <GtgrNumberInput 
-                T="double?"
-                Label="Lat"
-                Value="@TagInput.Lat"
-                OnChange="@(x => TagInput.Lat = x)">
-            </GtgrNumberInput>
-        </MudItem>
-        <MudItem xs="6">
-            <GtgrNumberInput 
-                T="double?"
-                Label="Long"
-                Value="@TagInput.Long"
-                OnChange="@(x => TagInput.Long = x)">
-            </GtgrNumberInput>
-        </MudItem>
-    </MudGrid>
+    <GtgrGrid ColsSm="2">
+        <GtgrGridItem>
+            <GtgrFormGroup>
+                <GtgrNumberInput 
+                    T="double?"
+                    Label="Lat"
+                    Value="@TagInput.Lat"
+                    OnChange="@(x => TagInput.Lat = x)">
+                </GtgrNumberInput>
+            </GtgrFormGroup>
+        </GtgrGridItem>
+        <GtgrGridItem>
+            <GtgrFormGroup>
+                <GtgrNumberInput 
+                    T="double?"
+                    Label="Long"
+                    Value="@TagInput.Long"
+                    OnChange="@(x => TagInput.Long = x)">
+                </GtgrNumberInput>
+            </GtgrFormGroup>
+        </GtgrGridItem>
+    </GtgrGrid>
 
-    <div>
+    <GtgrFormGroup>
         <GtgrButton
             Type="GtgrButtonType.Primary"
             OnClick="@OnSubmitted">
             Add
         </GtgrButton>
-    </div>
+    </GtgrFormGroup>
 </form>
 
 @inject IJSRuntime JSRuntime

@@ -30,8 +30,10 @@
     }
 
     async function getCountryCode(options) {
+        console.log('getting country code', options);
         const geocoder = new google.maps.Geocoder(); 
         const response = await geocoder.geocode({ location: { lat: options.lat, lng: options.long } });        
+        console.log('response', response);
 
         const addressComponents = response.results[0]?.address_components;
         const countryComponent = addressComponents.find(x => x.types.includes('country'));

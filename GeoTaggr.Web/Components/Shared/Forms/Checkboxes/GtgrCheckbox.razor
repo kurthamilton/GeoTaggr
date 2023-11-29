@@ -1,15 +1,12 @@
 ﻿@using GeoTaggr.Core.Utils
 
-<div class="form-check">
-    <input id="@Id" class="form-check-input" type="checkbox" value="@Value" 
-        @onchange="@OnCheckboxChanged" />
-    @if (Label != null)
-    {
-        <label class="form-check-label" for="@Id">
-            @Label
-        </label>
-    }
-</div>
+<MudCheckBox
+    T="bool"
+    Label="@Label"
+    Checked="@Value"
+    CheckedChanged="@OnCheckboxChanged"
+    Class="gtgr-checkbox">
+</MudCheckBox>
 
 @code {
     [Parameter]
@@ -21,11 +18,9 @@
     [Parameter]
     public bool Value { get; set; }    
 
-    private string Id { get; } = TextUtils.GenerateRandomAlphaString(5);
-
-    private async Task OnCheckboxChanged(ChangeEventArgs e)
+    private async Task OnCheckboxChanged(bool value)
     {
-        Value = (bool?)e.Value ?? false;
+        Value = value;
         await OnChange.InvokeAsync(Value);
     }
 }

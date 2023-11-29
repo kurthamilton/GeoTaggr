@@ -1,0 +1,32 @@
+﻿<div class="gtgr-grid 
+    @(Cols > 0 ? $"cols-{Cols}" : null) 
+    @(ColsSm > 0 ? $"cols-sm-{ColsSm}" : null)
+    @(ColsMd > 0 ? $"cols-md-{ColsMd}" : null)
+    @(ColsLg > 0 ? $"cols-lg-{ColsLg}" : null)
+    @(ColsXl > 0 ? $"cols-xl-{ColsXl}" : null)
+    @(ColsXxl > 0 ? $"cols-xxl-{ColsXxl}" : null)">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public int Cols { get; set; }
+
+    [Parameter]
+    public int ColsSm { get; set; }
+
+    [Parameter]
+    public int ColsMd { get; set; }
+
+    [Parameter]
+    public int ColsLg { get; set; }
+
+    [Parameter]
+    public int ColsXl { get; set; }
+
+    [Parameter]
+    public int ColsXxl { get; set; }
+}

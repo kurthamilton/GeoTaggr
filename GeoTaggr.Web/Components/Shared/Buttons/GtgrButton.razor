@@ -8,7 +8,8 @@
     Href="@Href"
     Size="@ButtonSize"
     Variant="@ButtonVariant"
-    OnClick="@OnButtonClicked">
+    OnClick="@OnButtonClicked"
+    ButtonType="@ButtonType">
     @ChildContent
 </MudButton>
 
@@ -37,6 +38,9 @@
     public GtgrButtonSize Size {get; set;}
 
     [Parameter]
+    public bool Submit { get; set; }
+
+    [Parameter]
     public GtgrButtonType Type { get; set; }
 
     private Color ButtonColor => Type switch
@@ -49,6 +53,10 @@
     };
 
     private MudSize ButtonSize => Size.ToMudSize();
+
+    private ButtonType ButtonType => Submit
+        ? ButtonType.Submit
+        : ButtonType.Button;
 
     private Variant ButtonVariant => Type switch
     {

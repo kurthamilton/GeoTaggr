@@ -8,16 +8,14 @@
     return;
 }
 
-<GtgrCard>
+<GtgrCard Outlined="true">
     <Header>
-        <div class="d-flex">
-            <div class="me-auto">
-                @Country.Name
-            </div>
-            <div>
-                <GtgrCountryFlag IsoCode2="@Country.IsoCode2" Name="@Country.Name">
-                </GtgrCountryFlag>
-            </div>
+        <div class="mr-auto">
+            @Country.Name
+        </div>
+        <div>
+            <GtgrCountryFlag IsoCode2="@Country.IsoCode2" Name="@Country.Name">
+            </GtgrCountryFlag>
         </div>
     </Header>
     <Content>
