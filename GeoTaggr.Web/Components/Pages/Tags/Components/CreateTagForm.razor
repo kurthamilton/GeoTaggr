@@ -9,48 +9,50 @@
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
 @using GeoTaggr.Web.Components.Shared.Grids
 
-<form>
+<GtgrForm Model="@Model" OnSubmit="@OnSubmitted">    
+
+    <div>@Model.Country?.Text</div>
+    <div>@Model.Name</div>
+
     @if (CountryOptions != null)
-    {
+    {        
         <GtgrFormGroup>
             <GtgrSelect
                 Label="Country"
-                Options="@CountryOptions"
                 Required="true"
+                Options="@CountryOptions"
                 Value="@SelectedCountry"
-                OnChange="@OnCountrySelected">
+                OnChange="@OnCountrySelected"
+                For="@(() => Model.Country)">
             </GtgrSelect>
         </GtgrFormGroup>
     }    
 
-    @if (TagNameOptions != null)
-    {        
-        <GtgrFormGroup>            
-            <GtgrInputGroup>
-                <GtgrTextInput
-                    Id="tag-name"
-                    Label="Name"
-                    Required="true"
-                    Value="@TagInput.Name"
-                    OnChange="@(x => TagInput.Name = x)">
-                </GtgrTextInput>                
-            </GtgrInputGroup>
-        </GtgrFormGroup>
-    }
+    <GtgrFormGroup>           
+        <GtgrTextInput
+            Label="Name"
+            For="@(() => Model.Name)"
+            @bind-Value="@Model.Name"
+            Required="true"
+            AutocompleteOptions="@TagNames">
+        </GtgrTextInput>       
+    </GtgrFormGroup>
 
     <GtgrFormGroup>
         <GtgrTextInput
             Label="Value"
-            Required="true"
-            OnChange="@(x => TagInput.Value = x)">
+            For="@(() => Model.Value)"
+            @bind-Value="@Model.Value"
+            Required="true">
         </GtgrTextInput>
     </GtgrFormGroup>
 
     <GtgrFormGroup>
         <GtgrTextInput
-            HelpText="Use the Google Maps streetview URL"
             Label="Url"
-            OnChange="@OnUrlChanged">
+            For="@(() => Model.Url)"            
+            HelpText="Use the Google Maps streetview URL"
+            ValueChanged="@OnUrlChanged">
         </GtgrTextInput>
     </GtgrFormGroup>
 
@@ -60,8 +62,8 @@
                 <GtgrNumberInput 
                     T="double?"
                     Label="Lat"
-                    Value="@TagInput.Lat"
-                    OnChange="@(x => TagInput.Lat = x)">
+                    For="@(() => Model.Lat)"
+                    @bind-Value="@Model.Lat">
                 </GtgrNumberInput>
             </GtgrFormGroup>
         </GtgrGridItem>
@@ -70,8 +72,8 @@
                 <GtgrNumberInput 
                     T="double?"
                     Label="Long"
-                    Value="@TagInput.Long"
-                    OnChange="@(x => TagInput.Long = x)">
+                    For="@(() => Model.Long)"
+                    @bind-Value="@Model.Long">
                 </GtgrNumberInput>
             </GtgrFormGroup>
         </GtgrGridItem>
@@ -80,11 +82,11 @@
     <GtgrFormGroup>
         <GtgrButton
             Type="GtgrButtonType.Primary"
-            OnClick="@OnSubmitted">
+            Submit="true">
             Add
         </GtgrButton>
     </GtgrFormGroup>
-</form>
+</GtgrForm>
 
 @inject IJSRuntime JSRuntime
 @inject IMapService MapService
@@ -101,64 +103,72 @@
     [Parameter]
     public IReadOnlyCollection<string>? TagNames { get; set; }
 
+    private EditContext? EditContext { get; set; }
+
+    private CreateTagFormModel Model { get; set; } = new();
+
     private string? SelectedCountry { get; set; }
 
-    private TagInput TagInput { get; } = new();
-
-    private IReadOnlyCollection<SelectOption>? TagNameOptions { get; set; }
-
-    protected override void OnParametersSet()
+    protected override void OnInitialized()
     {
-        base.OnParametersSet();
+        base.OnInitialized();
 
-        TagNameOptions = TagNames
-            ?.Select(x => new SelectOption(x, x))
-            .ToArray();
+        EditContext = new(Model);
     }
 
-    private void OnCountrySelected(string? countryId)
+    private void OnCountrySelected(SelectOption? option)
     {        
-        if (int.TryParse(countryId, out int parsed))
-        {
-            TagInput.CountryId = parsed;
-            SelectedCountry = countryId;
-        }
-        else
-        {
-            TagInput.CountryId = null;
-            SelectedCountry = null;
-        }
+        Model.Country = option;
+        SelectedCountry = option?.Key;
     }
 
     private async Task OnSubmitted()
     {
-        await OnSubmit.InvokeAsync(TagInput);
-    }
-
-    private void OnTagNameSelected(SelectOption option)
-    {
-        TagInput.Name = option.Text;
-    }
-
-    private async void OnUrlChanged(string? url)
-    {
-        TagInput.Url = url;
-
-        if (MapService.TryParseLocation(url, out Coordinates? coordinates))
+        await OnSubmit.InvokeAsync(new TagInput
         {
-            TagInput.Lat = coordinates.Lat;
-            TagInput.Long = coordinates.Long;
+            CountryId = int.Parse(Model.Country?.Key ?? ""),
+            Name = Model.Name,
+            Value = Model.Value,
+            Lat = Model.Lat,
+            Long = Model.Long,
+            Url = Model.Url
+        });
 
-            string code = await JSRuntime.InvokeAsync<string>("gtgr.maps.getCountryCode", new { lat = TagInput.Lat, @long = TagInput.Long });
-            Country? country = Countries
-                ?.Values
-                .FirstOrDefault(x => string.Equals(x.IsoCode2, code, StringComparison.InvariantCultureIgnoreCase));
-            if (country != null)
-            {
-                SelectedCountry = country.CountryId.ToString();
-                TagInput.CountryId = country.CountryId;
-                await InvokeAsync(StateHasChanged);
-            }
+        ResetForm();
+    }
+
+    private async Task OnUrlChanged(string? url)
+    {
+        Model.Url = url;
+
+        if (!MapService.TryParseLocation(url, out Coordinates? coordinates))
+        {
+            return;            
         }
+
+        Model.Lat = coordinates.Lat;
+        Model.Long = coordinates.Long;
+
+        string countryCode = await JSRuntime
+            .InvokeAsync<string>("gtgr.maps.getCountryCode", new { lat = Model.Lat, @long = Model.Long });
+        Country? country = Countries
+            ?.Values
+            .FirstOrDefault(x => string.Equals(x.IsoCode2, countryCode, StringComparison.InvariantCultureIgnoreCase));
+        if (country == null)
+        {
+            return;            
+        }
+
+        SelectedCountry = country.CountryId.ToString();
+        Model.Country = CountryOptions
+            ?.FirstOrDefault(x => x.Key == country.CountryId.ToString());
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void ResetForm()
+    {
+        Model = new();
+        EditContext = new(Model);
+        SelectedCountry = null;
     }
 }

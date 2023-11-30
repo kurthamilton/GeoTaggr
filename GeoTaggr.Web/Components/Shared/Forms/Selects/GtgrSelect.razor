@@ -1,4 +1,5 @@
 ﻿@inherits GtgrFormComponentBase
+@using System.Linq.Expressions
 @using GeoTaggr.Web.Components.Shared.Dropdowns
 
 @if (Options == null)
@@ -13,18 +14,16 @@
     SearchFunc="@SearchAsync"
     MaxItems="null"
     Value="@SelectedOption"
-    ValueChanged="@OnOptionSelected">
-    @foreach (SelectOption option in Options)
-    {
-        <MudSelectItem 
-            Value="@option">
-        </MudSelectItem>
-    }
+    ValueChanged="@OnOptionSelected"
+    For="@For">    
 </MudAutocomplete>
 
 @code {
     [Parameter]
-    public EventCallback<string?> OnChange { get; set; }
+    public Expression<Func<SelectOption?>>? For { get; set; }
+
+    [Parameter]
+    public EventCallback<SelectOption?> OnChange { get; set; }
 
     [Parameter]
     public IReadOnlyCollection<SelectOption>? Options { get; set; }
@@ -49,16 +48,10 @@
         }
     }
 
-    private Task OnOptionSelected(SelectOption? option)
+    private async Task OnOptionSelected(SelectOption? option)
     {
         SelectedOption = option;
-        return Task.CompletedTask;
-    }
-
-    private async Task OnSelectChange(ChangeEventArgs e)
-    {
-        string? value = e.Value?.ToString();
-        await OnChange.InvokeAsync(value);
+        await OnChange.InvokeAsync(SelectedOption);
     }
 
     private IEnumerable<SelectOption> Search(string? value)

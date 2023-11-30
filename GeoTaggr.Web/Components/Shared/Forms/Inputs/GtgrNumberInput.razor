@@ -1,4 +1,5 @@
-﻿@typeparam T
+﻿@using System.Linq.Expressions
+@typeparam T
 @inherits GtgrFormComponentBase
 
 <MudNumericField
@@ -10,25 +11,29 @@
     Max="@Max"
     Min="@Min"
     Clearable="true"
-    HideSpinButtons="true">
+    HideSpinButtons="true"
+    For="@For">
 </MudNumericField>
 
 @code {
     [Parameter]
+    public Expression<Func<T?>>? For { get; set; }
+
+    [Parameter]
     public T? Max { get; set; }
 
     [Parameter]
-    public T? Min { get; set; }
-
-    [Parameter]
-    public EventCallback<T?> OnChange { get; set; }
+    public T? Min { get; set; }    
 
     [Parameter]
     public T? Value { get; set; }        
 
+    [Parameter]
+    public EventCallback<T?> ValueChanged { get; set; }
+
     private async Task OnInputChanged(T? value)
     {
         Value = value;
-        await OnChange.InvokeAsync(value);
+        await ValueChanged.InvokeAsync(value);
     }    
 }

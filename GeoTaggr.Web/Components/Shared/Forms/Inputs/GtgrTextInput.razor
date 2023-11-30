@@ -1,32 +1,87 @@
 ﻿@inherits GtgrFormComponentBase
+@using System.Linq.Expressions
 
-<MudTextField
-    T="string?"
-    Label="@Label"
-    Required="@Required"
-    Value="@Value"
-    ValueChanged="@OnInputChanged"
-    HelperText="@HelpText"
-    DebounceInterval="200"
-    OnDebounceIntervalElapsed="@OnDebounceIntervalElapsed">
-</MudTextField>
+@if (AutocompleteOptions != null)
+{
+    <MudAutocomplete
+        T="string?"
+        Label="@Label"
+        Required="@Required"
+        Value="@Value"
+        ValueChanged="@OnInputChanged"
+        HelperText="@HelpText"
+        For="@For"        
+        SearchFunc="@SearchAsync"
+        ResetValueOnEmptyText="true"
+        SelectValueOnTab="true"
+        CoerceValue="true"
+        CoerceText="true">
+    </MudAutocomplete>   
+}
+else
+{
+    <MudTextField
+        T="string?"
+        Label="@Label"
+        Required="@Required"
+        Value="@Value"
+        ValueChanged="@OnInputChanged"
+        HelperText="@HelpText"    
+        For="@For"
+        DebounceInterval="@DebounceInterval"
+        OnDebounceIntervalElapsed="@OnDebounceIntervalElapsed">
+    </MudTextField>
+}
 
 @code {
     [Parameter]
-    public EventCallback<string?> OnChange { get; set; }
+    public IReadOnlyCollection<string>? AutocompleteOptions { get; set; }
+
+    [CascadingParameter]
+    public EditContext? EditContext { get; set; }    
+
+    [Parameter]
+    public Expression<Func<string?>>? For { get; set; }
 
     [Parameter]
     public string? Value { get; set; }    
 
+    [Parameter]
+    public EventCallback<string?> ValueChanged { get; set; }
+
+    private int DebounceInterval { get; } = 200;
+
     private async Task OnDebounceIntervalElapsed(string value)
     {
         Value = value;
-        await OnChange.InvokeAsync(value);
+        await ValueChanged.InvokeAsync(value);
     }
 
     private async Task OnInputChanged(string? value)
     {
         Value = value;
-        await OnChange.InvokeAsync(value);
-    }    
+        await ValueChanged.InvokeAsync(value);
+    }
+
+    private IEnumerable<string> Search(string? value)
+    {
+        if (AutocompleteOptions == null)
+        {
+            return Enumerable.Empty<string>();
+        }
+
+        if (string.IsNullOrEmpty(value))
+        {
+            return AutocompleteOptions;
+        }
+
+        return AutocompleteOptions
+            .Where(x => x.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    private Task<IEnumerable<string>> SearchAsync(string? value)
+    {
+        IEnumerable<string> options = Search(value);
+        return Task.FromResult(options);
+    }
 }
