@@ -19,6 +19,9 @@ namespace GeoTaggr.Data.Sqlite.Countries
         public Task<Country?> GetCountryAsync(int countryId) 
             => ReadSingleAsync<Country>(x => x.CountryId == countryId);
 
+        public Task<Country?> GetCountryByIsoCode2Async(string isoCode2)
+            => ReadSingleAsync<Country>(x => x.IsoCode2 == isoCode2);
+
         public Task<bool> UpdateCountryAsync(Country country)
             => UpdateOneAsync(country);
     }

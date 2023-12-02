@@ -2,16 +2,19 @@
 @using GeoTaggr.Web.Components.Shared.Buttons
 @using GeoTaggr.Web.Components.Shared.Cards
 @using GeoTaggr.Web.Components.Shared.Countries
+@using GeoTaggr.Web.Components.Shared.Links
 
 @if (Country == null)
 {
     return;
 }
 
-<GtgrCard Outlined="true">
+<GtgrCard Id="@Country.IsoCode2" Outlined="true">
     <Header>
         <div class="mr-auto">
-            @Country.Name
+            <GtgrLink Href="@GtgrRoutes.GetCountryUrl(@Country)">
+                @Country.Name
+            </GtgrLink>            
         </div>
         <div>
             <GtgrCountryFlag IsoCode2="@Country.IsoCode2" Name="@Country.Name">

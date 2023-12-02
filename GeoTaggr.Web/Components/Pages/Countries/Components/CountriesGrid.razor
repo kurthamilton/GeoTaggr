@@ -1,0 +1,36 @@
+﻿@using GeoTaggr.Services.Countries
+@using GeoTaggr.Web.Components.Shared.Grids
+
+@if (Countries == null)
+{
+    return;    
+}
+
+<GtgrGrid Cols="2" ColsSm="3" ColsMd="4" ColsLg="5">
+    @foreach (Country country in Countries.OrderBy(x => x.Name))
+    {
+        <GtgrGridItem>
+            <CountryCard 
+                Country="@country"
+                OnInclude="@OnCountryIncluded">
+            </CountryCard>
+        </GtgrGridItem>        
+    }
+</GtgrGrid>
+
+@inject ICountryService CountryService
+@code {
+    [Parameter]
+    public IReadOnlyCollection<Country>? Countries { get; set; }
+
+    private async Task OnCountryIncluded(Country? country)
+    {
+        if (country == null)
+        {
+            return;
+        }
+
+        await CountryService.IncludeCountryAsync(country.CountryId);
+        country.HasCoverage = true;
+    }
+}

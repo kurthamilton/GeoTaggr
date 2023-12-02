@@ -10,6 +10,8 @@ namespace GeoTaggr.Data.Countries
 
         Task<Country?> GetCountryAsync(int countryId);
 
+        Task<Country?> GetCountryByIsoCode2Async(string isoCode2);
+
         Task<bool> UpdateCountryAsync(Country country);
     }
 }

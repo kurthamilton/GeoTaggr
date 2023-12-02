@@ -1,9 +1,8 @@
-﻿@page "/countries"
+﻿@attribute [Route(GtgrRoutes.Countries)]
 @inherits GtgrPage
 @using GeoTaggr.Core.Countries
 @using GeoTaggr.Services.Countries
 @using GeoTaggr.Web.Components.Shared.Grids
-@using GeoTaggr.Web.Components.Shared.Layout
 
 @if (Countries == null)
 {
@@ -15,17 +14,9 @@
     </CountryFilter>
 </GtgrWidgetContainer>
 
-<GtgrGrid Cols="2" ColsSm="3" ColsMd="4" ColsLg="5">
-    @foreach (Country country in Countries)
-    {
-        <GtgrGridItem>
-            <CountryCard 
-                Country="@country"
-                OnInclude="@OnCountryIncluded">
-            </CountryCard>
-        </GtgrGridItem>        
-    }
-</GtgrGrid>
+<CountriesGrid
+    Countries="@Countries">
+</CountriesGrid>
 
 
 @inject ICountryService CountryService
@@ -45,18 +36,7 @@
     {
         Countries = null;
         Countries = await CountryService.GetCountriesAsync(Filter);
-    }
-
-    private async Task OnCountryIncluded(Country? country)
-    {
-        if (country == null)
-        {
-            return;
-        }
-
-        await CountryService.IncludeCountryAsync(country.CountryId);
-        country.HasCoverage = true;
-    }
+    }    
 
     private async Task OnFiltersChanged(CountryFilterValues filter)
     {

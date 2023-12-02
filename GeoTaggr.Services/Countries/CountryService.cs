@@ -14,6 +14,11 @@ public class CountryService(ICountryRepository countryRepository) : ICountryServ
             .ToArray();
     }
 
+    public Task<Country?> GetCountryByIsoCode2Async(string isoCode2)
+    {
+        return countryRepository.GetCountryByIsoCode2Async(isoCode2);
+    }
+
     public async Task<IReadOnlyDictionary<int, Country>> GetCountryDictionaryAsync(CountryFilterValues filter)
     {
         IReadOnlyCollection<Country> countries = await GetCountriesAsync(filter);
@@ -36,5 +41,38 @@ public class CountryService(ICountryRepository countryRepository) : ICountryServ
         return success
             ? ServiceResult.Successful("Country updated")
             : ServiceResult.Failure("Error updating country");
+    }
+
+    public async Task<ServiceResult> UpdateCountryAsync(int countryId, string name)
+    {
+        IReadOnlyCollection<Country> countries = await GetCountriesAsync(new CountryFilterValues());
+
+        Country? country = countries
+            .FirstOrDefault(x => x.CountryId == countryId);
+        if (country == null)
+        {
+            return ServiceResult.Failure("Country not found");
+        }
+
+        string originalName = country.Name;
+        string newName = name.Trim();
+
+        if (string.Equals(originalName, newName, StringComparison.OrdinalIgnoreCase))
+        {
+            return ServiceResult.Successful();
+        }
+
+        if (countries.Any(x => x.CountryId != countryId && 
+            string.Equals(x.Name, newName, StringComparison.InvariantCultureIgnoreCase)))
+        {
+            return ServiceResult.Failure($"Country '{name}' already exists");
+        }
+
+        country.Name = newName;
+
+        bool result = await countryRepository.UpdateCountryAsync(country);
+        return result
+            ? ServiceResult.Successful($"Country name updated from '{originalName}' to '{newName}'")
+            : ServiceResult.Failure($"Error updating country '{originalName}'");
     }
 }

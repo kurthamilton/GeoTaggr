@@ -1,4 +1,13 @@
-﻿.btn-icon {
+﻿.mud-main-content {
+  position: fixed;
+  top: var(--mud-appbar-height);
+  overflow: scroll;
+  height: calc(100% - var(--mud-appbar-height));
+  width: 100%;
+  padding-top: var(--gtgr-spacing);
+}
+
+.btn-icon {
   display: flex;
   align-items: center;
   min-width: 0 !important;
@@ -15,6 +24,10 @@
 
 .hover-toggle {
   display: flex;
+}
+
+.mud-snackbar-location-top-right {
+  top: var(--mud-appbar-height);
 }
 
 :root {

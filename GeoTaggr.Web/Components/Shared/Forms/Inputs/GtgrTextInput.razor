@@ -37,9 +37,6 @@ else
     [Parameter]
     public IReadOnlyCollection<string>? AutocompleteOptions { get; set; }
 
-    [CascadingParameter]
-    public EditContext? EditContext { get; set; }    
-
     [Parameter]
     public Expression<Func<string?>>? For { get; set; }
 

@@ -1,0 +1,8 @@
+.mud-main-content {
+    position: fixed;
+    top: var(--mud-appbar-height);
+    overflow: scroll;
+    height: calc(100% - var(--mud-appbar-height));
+    width: 100%;
+    padding-top: var(--gtgr-spacing);
+}

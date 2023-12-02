@@ -10,6 +10,6 @@
 
         public string IsoCode3 { get; } = isoCode3;
 
-        public string Name { get; } = name;
+        public string Name { get; set; } = name;
     }
 }

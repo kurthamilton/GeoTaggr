@@ -1,4 +1,4 @@
-﻿@page "/tags"
+﻿@attribute [Route(GtgrRoutes.Tags)]
 @inherits GtgrPage
 @using GeoTaggr.Core.Countries
 @using GeoTaggr.Core.Tags
@@ -7,7 +7,6 @@
 @using GeoTaggr.Services.Countries
 @using GeoTaggr.Services.Tags
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
-@using GeoTaggr.Web.Components.Shared.Layout
 @using GeoTaggr.Web.Components.Shared.Maps
 
 @if (Tags == null)
@@ -24,7 +23,7 @@
         <CreateTagForm
             Countries="@Countries"
             CountryOptions="@CountryOptions"
-            OnSubmit="@OnTagSubmitted"
+            OnTagCreated="@OnTagCreated"
             TagNames="@TagNames">
         </CreateTagForm>
     </MudItem>
@@ -110,17 +109,8 @@
         }
     }
 
-    private async Task OnTagSubmitted(TagInput input)
+    private async Task OnTagCreated()
     {
-        if (UserId == null)
-        {
-            return;
-        }
-
-        ServiceResult result = await TagService.AddTagAsync(input, UserId.Value);
-        if (result.Success)
-        {
-            await LoadTagsAsync();
-        }
+        await LoadTagsAsync();
     }
 }

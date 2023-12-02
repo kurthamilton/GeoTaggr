@@ -1,5 +1,6 @@
 ﻿@using GeoTaggr.Core.Countries
 @using GeoTaggr.Core.Maps
+@using GeoTaggr.Services
 @using GeoTaggr.Services.Maps
 @using GeoTaggr.Services.Tags
 @using GeoTaggr.Web.Components.Shared.Buttons
@@ -87,6 +88,7 @@
 
 @inject IJSRuntime JSRuntime
 @inject IMapService MapService
+@inject ITagService TagService
 @code {
     [Parameter]
     public IReadOnlyDictionary<int, Country>? Countries { get; set; }
@@ -95,10 +97,13 @@
     public IReadOnlyCollection<SelectOption>? CountryOptions { get; set; }
 
     [Parameter]
-    public EventCallback<TagInput> OnSubmit { get; set; }
+    public EventCallback OnTagCreated { get; set; }
 
     [Parameter]
     public IReadOnlyCollection<string>? TagNames { get; set; }
+
+    [Parameter]
+    public int? UserId { get; set; }
 
     private CreateTagFormModel Model { get; set; } = new();
 
@@ -117,7 +122,12 @@
 
     private async Task OnSubmitted()
     {
-        await OnSubmit.InvokeAsync(new TagInput
+        if (UserId == null)
+        {
+            return;
+        }
+
+        TagInput input = new TagInput
         {
             CountryId = int.Parse(Model.Country?.Key ?? ""),
             Name = Model.Name,
@@ -125,9 +135,14 @@
             Lat = Model.Lat,
             Long = Model.Long,
             Url = Model.Url
-        });
+        };        
 
-        ResetForm();
+        ServiceResult result = await TagService.AddTagAsync(input, UserId.Value);
+        if (result.Success)
+        {
+            ResetForm();
+            await OnTagCreated.InvokeAsync();
+        }        
     }
 
     private async Task OnUrlChanged(string? url)
