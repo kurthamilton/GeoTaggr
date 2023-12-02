@@ -12,10 +12,9 @@
     public RenderFragment? ChildContent { get; set; }
 
     [Parameter]
-    public string? Href { get; set; }    
+    public string? Href { get; set; }
 
-    [Parameter]
-    public bool NewWindow { get; set; }
+    private bool NewWindow => Href?.StartsWith("/") != true;
 
     private string? Target => NewWindow ? "_blank" : null;
 

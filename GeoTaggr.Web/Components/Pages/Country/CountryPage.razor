@@ -2,19 +2,19 @@
 @inherits GtgrPage
 @using GeoTaggr.Services.Countries
 @using GeoTaggr.Web.Components.Shared.Breadcrumbs
+@using GeoTaggr.Web.Components.Shared.Countries
 
-<GtgrBreadcrumbs Breadcrumbs="@Breadcrumbs">
-</GtgrBreadcrumbs>
-
-<GtgrWidgetContainer>
-    <CountryPageHeader Country="@Country">
-    </CountryPageHeader>
-</GtgrWidgetContainer>
-
-<CountryForm 
-    Country="@Country"
-    OnCountryUpdate="@OnCountryUpdated">
-</CountryForm>
+<GtgrPageLayout Title="@(Country?.Name ?? "Country")" Breadcrumbs="@Breadcrumbs">    
+    <Heading>
+        <GtgrCountryWithFlag Country="@Country"></GtgrCountryWithFlag>
+    </Heading>
+    <Content>
+        <CountryForm 
+            Country="@Country"
+            OnCountryUpdate="@OnCountryUpdated">
+        </CountryForm>
+    </Content>
+</GtgrPageLayout>
 
 @inject ICountryService CountryService
 @code {

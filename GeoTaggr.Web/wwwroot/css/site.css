@@ -13,6 +13,10 @@
   min-width: 0 !important;
 }
 
+.mud-card-header {
+  border-bottom: 1px solid var(--mud-palette-lines-inputs);
+}
+
 .gtgr-checkbox .mud-button-root {
   padding-left: 0;
 }

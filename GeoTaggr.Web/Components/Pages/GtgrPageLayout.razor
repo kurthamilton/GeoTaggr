@@ -1,0 +1,35 @@
+﻿@using GeoTaggr.Web.Components.Shared.Breadcrumbs
+@using GeoTaggr.Web.Components.Shared.Pages
+
+<PageTitle>@Title | GeoTaggr</PageTitle>
+
+@if (Breadcrumbs != null)
+{
+    <GtgrBreadcrumbs Breadcrumbs="@Breadcrumbs">
+    </GtgrBreadcrumbs>
+}
+
+@if (Heading != null)
+{
+    <GtgrPageHeading>@Heading</GtgrPageHeading>
+}
+else
+{
+    <GtgrPageHeading>@Title</GtgrPageHeading>
+}
+
+@Content
+
+@code {
+    [Parameter]
+    public IReadOnlyCollection<GtgrBreadcrumbItem>? Breadcrumbs { get; set; }
+
+    [Parameter]
+    public RenderFragment? Content { get; set; }
+
+    [Parameter]
+    public RenderFragment? Heading { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+}

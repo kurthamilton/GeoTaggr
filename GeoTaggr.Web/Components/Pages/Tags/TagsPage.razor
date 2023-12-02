@@ -8,35 +8,35 @@
 @using GeoTaggr.Services.Tags
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
 @using GeoTaggr.Web.Components.Shared.Maps
+@using GeoTaggr.Web.Components.Shared.Pages
 
-@if (Tags == null)
-{
-    return;
-}
+<GtgrPageLayout Title="Tags">    
+    <Content>
+        <GtgrWidgetContainer>
+            <MudGrid>
+                <MudItem xs="12" md="9">
+                    <GtgrMap Markers="@MapMarkers"></GtgrMap>
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <CreateTagForm
+                        Countries="@Countries"
+                        CountryOptions="@CountryOptions"
+                        OnTagCreated="@OnTagCreated"
+                        TagNames="@TagNames">
+                    </CreateTagForm>
+                </MudItem>
+            </MudGrid>
+        </GtgrWidgetContainer>
 
-<GtgrWidgetContainer>
-    <MudGrid>
-    <MudItem xs="12" md="9">
-        <GtgrMap Markers="@MapMarkers"></GtgrMap>
-    </MudItem>
-    <MudItem xs="12" md="3">
-        <CreateTagForm
-            Countries="@Countries"
-            CountryOptions="@CountryOptions"
-            OnTagCreated="@OnTagCreated"
-            TagNames="@TagNames">
-        </CreateTagForm>
-    </MudItem>
-</MudGrid>
-</GtgrWidgetContainer>
-
-<GtgrWidgetContainer>
-    <TagsTable
-        Countries="@Countries"
-        OnDelete="@OnTagDelete"
-        Tags="@Tags">
-    </TagsTable>
-</GtgrWidgetContainer>
+        <GtgrWidgetContainer>
+            <TagsTable
+                Countries="@Countries"
+                OnDelete="@OnTagDelete"
+                Tags="@Tags">
+            </TagsTable>
+        </GtgrWidgetContainer>
+    </Content>
+</GtgrPageLayout>
 
 @inject ICountryService CountryService
 @inject ITagService TagService

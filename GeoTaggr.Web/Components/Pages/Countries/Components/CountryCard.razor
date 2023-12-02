@@ -9,19 +9,19 @@
     return;
 }
 
-<GtgrCard Id="@Country.IsoCode2" Outlined="true">
-    <Header>
-        <div class="mr-auto">
-            <GtgrLink Href="@GtgrRoutes.GetCountryUrl(@Country)">
-                @Country.Name
-            </GtgrLink>            
-        </div>
-        <div>
-            <GtgrCountryFlag IsoCode2="@Country.IsoCode2" Name="@Country.Name">
-            </GtgrCountryFlag>
-        </div>
-    </Header>
+<GtgrCard Id="@Country.IsoCode2" Outlined="true">    
     <Content>
+        <GtgrFlexContainer>
+            <div class="mr-auto">
+                <GtgrLink Href="@GtgrRoutes.GetCountryUrl(@Country)">
+                    @Country.Name
+                </GtgrLink>
+            </div>
+            <div>
+                <GtgrCountryFlag IsoCode2="@Country.IsoCode2" Name="@Country.Name">
+                </GtgrCountryFlag>
+            </div>
+        </GtgrFlexContainer>
         @if (!Country.HasCoverage)
         {
             <div>

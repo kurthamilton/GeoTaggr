@@ -3,20 +3,19 @@
 @using GeoTaggr.Core.Countries
 @using GeoTaggr.Services.Countries
 @using GeoTaggr.Web.Components.Shared.Grids
+@using GeoTaggr.Web.Components.Shared.Pages
 
-@if (Countries == null)
-{
-    return;
-}
+<GtgrPageLayout Title="Countries">    
+    <Content>
+        <GtgrWidgetContainer>
+            <CountryFilter OnChange="@OnFiltersChanged">
+            </CountryFilter>
+        </GtgrWidgetContainer>
 
-<GtgrWidgetContainer>
-    <CountryFilter OnChange="@OnFiltersChanged">
-    </CountryFilter>
-</GtgrWidgetContainer>
-
-<CountriesGrid
-    Countries="@Countries">
-</CountriesGrid>
+        <CountriesGrid Countries="@Countries">
+        </CountriesGrid>
+    </Content>
+</GtgrPageLayout>
 
 
 @inject ICountryService CountryService

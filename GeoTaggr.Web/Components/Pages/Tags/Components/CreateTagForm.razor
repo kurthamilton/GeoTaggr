@@ -4,87 +4,95 @@
 @using GeoTaggr.Services.Maps
 @using GeoTaggr.Services.Tags
 @using GeoTaggr.Web.Components.Shared.Buttons
+@using GeoTaggr.Web.Components.Shared.Cards
 @using GeoTaggr.Web.Components.Shared.Dropdowns
 @using GeoTaggr.Web.Components.Shared.Forms
 @using GeoTaggr.Web.Components.Shared.Forms.Inputs
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
 @using GeoTaggr.Web.Components.Shared.Grids
 
-<GtgrForm Model="@Model" OnSubmit="@OnSubmitted">
-    @if (CountryOptions != null)
-    {        
-        <GtgrFormGroup>
-            <GtgrSelect
-                Label="Country"
-                Required="true"
-                Options="@CountryOptions"
-                Value="@SelectedCountry"
-                OnChange="@OnCountrySelected"
-                For="@(() => Model.Country)">
-            </GtgrSelect>
-        </GtgrFormGroup>
-    }    
+<GtgrCard>
+    <Header>
+        Create new tag
+    </Header>
+    <Content>
+        <GtgrForm Model="@Model" OnSubmit="@OnSubmitted">
+            @if (CountryOptions != null)
+            {        
+                <GtgrFormGroup>
+                    <GtgrSelect
+                        Label="Country"
+                        Required="true"
+                        Options="@CountryOptions"
+                        Value="@SelectedCountry"
+                        OnChange="@OnCountrySelected"
+                        For="@(() => Model.Country)">
+                    </GtgrSelect>
+                </GtgrFormGroup>
+            }    
 
-    <GtgrFormGroup>           
-        <GtgrTextInput
-            Label="Name"
-            For="@(() => Model.Name)"
-            @bind-Value="@Model.Name"
-            Required="true"
-            AutocompleteOptions="@TagNames">
-        </GtgrTextInput>       
-    </GtgrFormGroup>
-
-    <GtgrFormGroup>
-        <GtgrTextInput
-            Label="Value"
-            For="@(() => Model.Value)"
-            @bind-Value="@Model.Value"
-            Required="true">
-        </GtgrTextInput>
-    </GtgrFormGroup>
-
-    <GtgrFormGroup>
-        <GtgrTextInput
-            Label="Url"
-            For="@(() => Model.Url)"                  
-            HelpText="Use the Google Maps streetview URL"
-            Value="@Model.Url"
-            ValueChanged="@OnUrlChanged">
-        </GtgrTextInput>
-    </GtgrFormGroup>
-
-    <GtgrGrid ColsSm="2">
-        <GtgrGridItem>
-            <GtgrFormGroup>
-                <GtgrNumberInput 
-                    T="double?"
-                    Label="Lat"
-                    For="@(() => Model.Lat)"
-                    @bind-Value="@Model.Lat">
-                </GtgrNumberInput>
+            <GtgrFormGroup>           
+                <GtgrTextInput
+                    Label="Name"
+                    For="@(() => Model.Name)"
+                    @bind-Value="@Model.Name"
+                    Required="true"
+                    AutocompleteOptions="@TagNames">
+                </GtgrTextInput>       
             </GtgrFormGroup>
-        </GtgrGridItem>
-        <GtgrGridItem>
-            <GtgrFormGroup>
-                <GtgrNumberInput 
-                    T="double?"
-                    Label="Long"
-                    For="@(() => Model.Long)"
-                    @bind-Value="@Model.Long">
-                </GtgrNumberInput>
-            </GtgrFormGroup>
-        </GtgrGridItem>
-    </GtgrGrid>
 
-    <GtgrFormGroup>
-        <GtgrButton
-            Type="GtgrButtonType.Primary"
-            Submit="true">
-            Add
-        </GtgrButton>
-    </GtgrFormGroup>
-</GtgrForm>
+            <GtgrFormGroup>
+                <GtgrTextInput
+                    Label="Value"
+                    For="@(() => Model.Value)"
+                    @bind-Value="@Model.Value"
+                    Required="true">
+                </GtgrTextInput>
+            </GtgrFormGroup>
+
+            <GtgrFormGroup>
+                <GtgrTextInput
+                    Label="Url"
+                    For="@(() => Model.Url)"                  
+                    HelpText="Use the Google Maps streetview URL"
+                    Value="@Model.Url"
+                    ValueChanged="@OnUrlChanged">
+                </GtgrTextInput>
+            </GtgrFormGroup>
+
+            <GtgrGrid ColsSm="2">
+                <GtgrGridItem>
+                    <GtgrFormGroup>
+                        <GtgrNumberInput 
+                            T="double?"
+                            Label="Lat"
+                            For="@(() => Model.Lat)"
+                            @bind-Value="@Model.Lat">
+                        </GtgrNumberInput>
+                    </GtgrFormGroup>
+                </GtgrGridItem>
+                <GtgrGridItem>
+                    <GtgrFormGroup>
+                        <GtgrNumberInput 
+                            T="double?"
+                            Label="Long"
+                            For="@(() => Model.Long)"
+                            @bind-Value="@Model.Long">
+                        </GtgrNumberInput>
+                    </GtgrFormGroup>
+                </GtgrGridItem>
+            </GtgrGrid>
+
+            <GtgrFormGroup>
+                <GtgrButton
+                    Type="GtgrButtonType.Primary"
+                    Submit="true">
+                    Add
+                </GtgrButton>
+            </GtgrFormGroup>
+        </GtgrForm>
+    </Content>
+</GtgrCard>
 
 @inject IJSRuntime JSRuntime
 @inject IMapService MapService

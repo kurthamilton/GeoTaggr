@@ -29,17 +29,9 @@
 
             <tr>
                 <td>
-                    <GtgrLink                         
-                        Href="@GtgrRoutes.GetCountryUrl(country)">
-                        <div class="d-flex align-center">
-                            <GtgrCountryFlag 
-                                IsoCode2="@country.IsoCode2" 
-                                Name="@country.Name">
-                            </GtgrCountryFlag>
-                            <span class="ml-1">
-                                @country.Name
-                            </span>
-                        </div>                        
+                    <GtgrLink Href="@GtgrRoutes.GetCountryUrl(country)">
+                        <GtgrCountryWithFlag Country="@country">
+                        </GtgrCountryWithFlag>
                     </GtgrLink>
                 </td>
                 <td>@tag.Name</td>
@@ -47,7 +39,7 @@
                 <td>
                     @if (!string.IsNullOrEmpty(tag.Url))
                     {
-                        <GtgrLink Href="@tag.Url" NewWindow="true">
+                        <GtgrLink Href="@tag.Url">
                             @if (tag.Location != null)
                             {
                                 @tag.Location.ToString()
