@@ -8,6 +8,7 @@
 }
 
 <MudAutocomplete 
+    @ref="@Autocomplete"
     T="SelectOption" 
     Label="@Label"     
     Required="@Required" 
@@ -31,12 +32,24 @@
     [Parameter]
     public string? Value { get; set; }
 
+    private MudAutocomplete<SelectOption>? Autocomplete { get; set; }
+
     private SelectOption? SelectedOption { get; set; }
 
     protected override async Task OnParametersSetAsync()
     {
         await base.OnParametersSetAsync();
 
+        // reset the autocomplete if updating with a null value
+        if (Autocomplete != null && 
+            string.IsNullOrEmpty(Value) && 
+            Autocomplete.Value != null)
+        {
+            SelectedOption = null;
+            await Autocomplete.ResetAsync();
+        }
+
+        // set the selected option
         if (Options != null && !string.IsNullOrEmpty(Value))
         {
             SelectOption? option = Options

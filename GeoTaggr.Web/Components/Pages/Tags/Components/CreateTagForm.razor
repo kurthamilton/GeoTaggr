@@ -9,11 +9,7 @@
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
 @using GeoTaggr.Web.Components.Shared.Grids
 
-<GtgrForm Model="@Model" OnSubmit="@OnSubmitted">    
-
-    <div>@Model.Country?.Text</div>
-    <div>@Model.Name</div>
-
+<GtgrForm Model="@Model" OnSubmit="@OnSubmitted">
     @if (CountryOptions != null)
     {        
         <GtgrFormGroup>
@@ -50,8 +46,9 @@
     <GtgrFormGroup>
         <GtgrTextInput
             Label="Url"
-            For="@(() => Model.Url)"            
+            For="@(() => Model.Url)"                  
             HelpText="Use the Google Maps streetview URL"
+            Value="@Model.Url"
             ValueChanged="@OnUrlChanged">
         </GtgrTextInput>
     </GtgrFormGroup>
@@ -103,8 +100,6 @@
     [Parameter]
     public IReadOnlyCollection<string>? TagNames { get; set; }
 
-    private EditContext? EditContext { get; set; }
-
     private CreateTagFormModel Model { get; set; } = new();
 
     private string? SelectedCountry { get; set; }
@@ -112,8 +107,6 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-
-        EditContext = new(Model);
     }
 
     private void OnCountrySelected(SelectOption? option)
@@ -168,7 +161,7 @@
     private void ResetForm()
     {
         Model = new();
-        EditContext = new(Model);
         SelectedCountry = null;
+        InvokeAsync(StateHasChanged);
     }
 }

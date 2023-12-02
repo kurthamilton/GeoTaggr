@@ -4,6 +4,7 @@
 @if (AutocompleteOptions != null)
 {
     <MudAutocomplete
+        @ref="@Autocomplete"
         T="string?"
         Label="@Label"
         Required="@Required"
@@ -14,8 +15,7 @@
         SearchFunc="@SearchAsync"
         ResetValueOnEmptyText="true"
         SelectValueOnTab="true"
-        CoerceValue="true"
-        CoerceText="true">
+        CoerceValue="true">
     </MudAutocomplete>   
 }
 else
@@ -49,7 +49,21 @@ else
     [Parameter]
     public EventCallback<string?> ValueChanged { get; set; }
 
+    private MudAutocomplete<string>? Autocomplete { get; set; }
+
     private int DebounceInterval { get; } = 200;
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+
+        if (Autocomplete != null && 
+            !string.IsNullOrEmpty(Autocomplete.Value) &&
+            string.IsNullOrEmpty(Value))
+        {
+            await Autocomplete.ResetAsync();
+        }
+    }
 
     private async Task OnDebounceIntervalElapsed(string value)
     {
