@@ -1,4 +1,7 @@
 // mud
 :root {
+    --gtgr-header-bg: var(--mud-palette-appbar-background);
+    --gtgr-header-bg-hover: color-mix(in srgb,var(--gtgr-bg-header), #fff 5%);
     --gtgr-color-danger: var(--mud-palette-error-darken);
+    --gtgr-color-primary: var(--mud-palette-primary);
 }

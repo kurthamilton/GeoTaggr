@@ -1,0 +1,42 @@
+﻿@using GeoTaggr.Web.Common.Extensions
+@using GeoTaggr.Web.Components.Shared.Buttons
+@implements IDisposable
+
+<GtgrButton Href="@Url" Class="@ButtonClass">
+    @ChildContent
+</GtgrButton>
+
+@inject NavigationManager NavigationManager
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Url { get; set; }
+
+    private bool Active { get; set; }
+
+    private string ButtonClass => $"navbar-link {(Active ? "active" : null)}";
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+
+    protected override void OnInitialized()
+    {
+        NavigationManager.LocationChanged += OnLocationChanged;
+        SetActive();
+    }
+
+    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
+    {
+        SetActive();
+        StateHasChanged();
+    }
+
+    private void SetActive()
+    {
+        Active = Url != "/" && NavigationManager.IsActivePath(Url ?? "", exactMatch: false);
+    }
+}

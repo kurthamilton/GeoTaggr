@@ -1,11 +1,12 @@
-﻿@inherits LayoutComponentBase
+﻿@using GeoTaggr.Web.Components.Shared.Navbar
+@inherits LayoutComponentBase
 
 <MudThemeProvider IsDarkMode="true" />
 <MudDialogProvider />
 <MudSnackbarProvider />
 
 <MudLayout>
-    <MainHeader></MainHeader>
+    <GtgrNavbar></GtgrNavbar>
 
     <MudMainContent>
         <GtgrContainer>

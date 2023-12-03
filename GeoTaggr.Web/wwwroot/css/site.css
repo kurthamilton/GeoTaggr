@@ -35,7 +35,10 @@
 }
 
 :root {
+  --gtgr-header-bg: var(--mud-palette-appbar-background);
+  --gtgr-header-bg-hover: color-mix(in srgb,var(--gtgr-bg-header), #fff 5%);
   --gtgr-color-danger: var(--mud-palette-error-darken);
+  --gtgr-color-primary: var(--mud-palette-primary);
 }
 
 #blazor-error-ui {
@@ -81,6 +84,10 @@
 .gtgr-spacer-y {
   margin-top: var(--gtgr-spacing);
   margin-bottom: var(--gtgr-spacing);
+}
+
+.h-100 {
+  height: 100%;
 }
 
 .gtgr-card {
@@ -219,4 +226,23 @@
 
 .map-container {
   height: 400px;
+}
+
+.navbar-link {
+  --gtgr-navbar-link-border-y-width: 3px;
+  --gtgr-navbar-link-padding-x: 1rem;
+  height: 100%;
+  padding-top: 0;
+  padding-bottom: 0;
+  border-radius: 0;
+  border-top: var(--gtgr-navbar-link-border-y-width) solid transparent;
+  border-bottom: var(--gtgr-navbar-link-border-y-width) solid transparent;
+  padding-left: var(--gtgr-navbar-link-padding-x);
+  padding-right: var(--gtgr-navbar-link-padding-x);
+}
+.navbar-link:hover {
+  background-color: var(--gtgr-header-bg-hover);
+}
+.navbar-link.active {
+  border-bottom-color: var(--gtgr-color-primary);
 }
