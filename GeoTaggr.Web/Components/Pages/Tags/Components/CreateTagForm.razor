@@ -1,4 +1,5 @@
-﻿@using GeoTaggr.Core.Countries
+﻿@inherits GtgrComponentBase
+@using GeoTaggr.Core.Countries
 @using GeoTaggr.Core.Maps
 @using GeoTaggr.Services
 @using GeoTaggr.Services.Maps
@@ -132,6 +133,7 @@
     {
         if (UserId == null)
         {
+            await ShowMessageAsync("Not logged in");
             return;
         }
 
@@ -146,11 +148,14 @@
         };        
 
         ServiceResult result = await TagService.AddTagAsync(input, UserId.Value);
-        if (result.Success)
-        {
-            ResetForm();
-            await OnTagCreated.InvokeAsync();
-        }        
+        await ShowMessageAsync(result.Message);
+        if (!result.Success)
+        {            
+            return;
+        }
+
+        ResetForm();
+        await OnTagCreated.InvokeAsync();
     }
 
     private async Task OnUrlChanged(string? url)

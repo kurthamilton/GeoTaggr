@@ -59,7 +59,7 @@
         }
 
         ServiceResult result = await CountryService.UpdateCountryAsync(Country.CountryId, Model.Name);
-        await ShowMessageAsync(result.Message ?? "");
+        await ShowMessageAsync(result.Message);
 
         await OnCountryUpdate.InvokeAsync();
     }

@@ -7,7 +7,7 @@
 @using GeoTaggr.Web.Components.Shared.Links
 @using GeoTaggr.Web.Components.Shared.Tables
 
-@if (Any.IsNull(Countries, Tags))
+@if (Any.IsNull(Countries, OrderedTags))
 {
     return;
 }
@@ -23,7 +23,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (Tag tag in Tags)
+        @foreach (Tag tag in OrderedTags)
         {
             Country country = Countries[tag.CountryId];
 
@@ -64,7 +64,7 @@
     </tbody>
 </GtgrTable>
 
-@code {
+    @code {
     [Parameter]
     public IReadOnlyDictionary<int, Country>? Countries { get; set; }
 
@@ -73,4 +73,17 @@
 
     [Parameter]
     public IReadOnlyCollection<Tag>? Tags { get; set; }
+
+    private IReadOnlyCollection<Tag>? OrderedTags { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        OrderedTags = Tags
+            ?.OrderBy(x => Countries?.ContainsKey(x.CountryId) == true ? Countries[x.CountryId]?.Name : "")
+            .ThenBy(x => x.Name)
+            .ThenBy(x => x.Value)
+            .ToArray();
+    }
 }

@@ -11,7 +11,7 @@ public abstract class GtgrComponentBase : ComponentBase
     [Inject]
     private ISnackbar SnackbarService { get; set; } = default!;
 
-    protected Task ShowMessageAsync(string message)
+    protected Task ShowMessageAsync(string? message)
     {
         if (string.IsNullOrEmpty(message))
         {

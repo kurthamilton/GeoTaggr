@@ -6,25 +6,33 @@ namespace GeoTaggr.Services.Maps
 {
     public class MapService(MapServiceSettings settings) : IMapService
     {
-        private static readonly Regex UrlRegex = 
-            new(@"google\.(\w|\.)+\/maps\/@(?<lat>\-?(\d|\.)+),(?<long>\-?(\d|\.)+),", RegexOptions.Compiled);
+        private static readonly IReadOnlyCollection<Regex> UrlRegexes = new[]
+        {
+            new Regex(@"google\.(\w|\.)+\/maps\/@(?<lat>\-?(\d|\.)+),(?<long>\-?(\d|\.)+),", RegexOptions.Compiled),
+            new Regex(@"google\.(\w|\.)+\/maps\?.+cbll=(?<lat>\-?(\d|\.)+),(?<long>\-?(\d|\.)+)", RegexOptions.Compiled)
+        };
         
         public string GetGoogleMapsApiKey() => settings.GoogleMapsApiKey;
 
         public bool TryParseLocation(string? url, 
             [NotNullWhen(true)] out Coordinates? location)
         {
-            Match match = UrlRegex.Match(url ?? "");
-            if (!match.Success)
+            foreach (Regex regex in UrlRegexes)
             {
-                location = null;
-                return false;
+                Match match = regex.Match(url ?? "");
+                if (!match.Success)
+                {
+                    continue;
+                }
+
+                double lat = double.Parse(match.Groups["lat"].Value);
+                double @long = double.Parse(match.Groups["long"].Value);
+                location = new Coordinates(lat, @long);
+                return true;
             }
 
-            double lat = double.Parse(match.Groups["lat"].Value);
-            double @long = double.Parse(match.Groups["long"].Value);
-            location = new Coordinates(lat, @long);
-            return true;
+            location = null;
+            return false;
         }
     }
 }

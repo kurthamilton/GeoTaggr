@@ -21,6 +21,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		run.bat = run.bat
 	EndProjectSection
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F780801C-F31F-4F88-A0B6-D0CC7FD86221}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTaggr.Services.Tests", "GeoTaggr.Services.Tests\GeoTaggr.Services.Tests.csproj", "{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -51,9 +55,16 @@ Global
 		{23DA5752-E51F-4A80-AC1D-E3F70088E720}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{23DA5752-E51F-4A80-AC1D-E3F70088E720}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{23DA5752-E51F-4A80-AC1D-E3F70088E720}.Release|Any CPU.Build.0 = Release|Any CPU
+		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D} = {F780801C-F31F-4F88-A0B6-D0CC7FD86221}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {14C56224-9DF6-471E-958D-55D5691320BC}
