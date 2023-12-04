@@ -6,39 +6,57 @@
     <MudAutocomplete
         @ref="@Autocomplete"
         T="string?"
+        Class="gtgr-form-control"
         Label="@Label"
         Required="@Required"
         Value="@Value"
-        ValueChanged="@OnInputChanged"
+        ValueChanged="@OnInputChanged"        
         HelperText="@HelpText"
         For="@For"        
         SearchFunc="@SearchAsync"
         ResetValueOnEmptyText="true"
         SelectValueOnTab="true"
-        CoerceValue="true">
+        CoerceValue="true"
+        FullWidth="@FullWidth"
+        Immediate="true">
     </MudAutocomplete>   
 }
 else
 {
     <MudTextField
         T="string?"
+        Class="gtgr-form-control"
         Label="@Label"
-        Required="@Required"
+        Required="@Required"        
         Value="@Value"
         ValueChanged="@OnInputChanged"
         HelperText="@HelpText"    
         For="@For"
         DebounceInterval="@DebounceInterval"
-        OnDebounceIntervalElapsed="@OnDebounceIntervalElapsed">
+        OnDebounceIntervalElapsed="@OnDebounceIntervalElapsed"
+        FullWidth="@FullWidth"
+        Immediate="true">
     </MudTextField>
 }
 
 @code {
+    /// <summary>
+    /// If specified autocomplete options will be offered
+    /// </summary>
     [Parameter]
     public IReadOnlyCollection<string>? AutocompleteOptions { get; set; }
 
+    /// <summary>
+    /// Used for binding form validation based on the property's attributes
+    /// </summary>
     [Parameter]
     public Expression<Func<string?>>? For { get; set; }
+
+    /// <summary>
+    /// Whether or not the input should be shown inline instead of full width
+    /// </summary>
+    [Parameter]
+    public bool Inline { get; set; }
 
     [Parameter]
     public string? Value { get; set; }    
@@ -49,6 +67,8 @@ else
     private MudAutocomplete<string>? Autocomplete { get; set; }
 
     private int DebounceInterval { get; } = 200;
+
+    private bool FullWidth => !Inline;
 
     protected override async Task OnParametersSetAsync()
     {

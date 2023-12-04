@@ -13,6 +13,8 @@ public static class GtgrRoutes
 
     public const string Country = $"{Countries}/{{{GtgrRouteParams.CountryIsoCode2}}}";
 
+    public const string TagOverview = "/tags/overview";
+
     public const string Tags = "/tags";
 
     public static string GetCountriesUrl(CoreCountry? country)

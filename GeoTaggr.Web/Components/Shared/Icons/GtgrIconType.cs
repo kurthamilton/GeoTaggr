@@ -3,5 +3,6 @@
 public enum GtgrIconType
 {
     None,
-    Delete
+    Delete,
+    Edit
 }

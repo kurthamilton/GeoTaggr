@@ -1,0 +1,23 @@
+.gtgr-form-group {
+    margin-bottom: 0.5rem;
+}
+
+.gtgr-form-inline {
+    display: flex;
+
+    .gtgr-form-group {
+        margin-right: 1rem;
+        margin-bottom: 0;
+    }
+
+    .gtgr-form-control {
+        margin-top: 0;
+    }
+
+    .gtgr-checkbox {
+        // align with inputs
+        --gtgr-checkbox-offset: 8px;
+        margin-top: var(--gtgr-checkbox-offset);
+        margin-bottom: calc(-1 * var(--gtgr-checkbox-offset));
+    }
+}

@@ -1,6 +1,7 @@
 ﻿@inherits GtgrComponentBase
 @using GeoTaggr.Core.Countries
 @using GeoTaggr.Core.Maps
+@using GeoTaggr.Core.Tags
 @using GeoTaggr.Services
 @using GeoTaggr.Services.Maps
 @using GeoTaggr.Services.Tags
@@ -109,7 +110,7 @@
     public EventCallback OnTagCreated { get; set; }
 
     [Parameter]
-    public IReadOnlyCollection<string>? TagNames { get; set; }
+    public IReadOnlyCollection<Tag>? Tags { get; set; }
 
     [Parameter]
     public int? UserId { get; set; }
@@ -117,6 +118,12 @@
     private CreateTagFormModel Model { get; set; } = new();
 
     private string? SelectedCountry { get; set; }
+
+    private IReadOnlyCollection<string>? TagNames => Tags
+        ?.Select(x => x.Name)
+        .Distinct(StringComparer.InvariantCultureIgnoreCase)
+        .OrderBy(x => x)
+        .ToArray();
 
     protected override void OnInitialized()
     {

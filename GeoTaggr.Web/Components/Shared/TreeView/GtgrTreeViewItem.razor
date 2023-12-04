@@ -1,0 +1,14 @@
+﻿<MudTreeViewItem Value="@Value" Expanded="@Expanded">    
+    @ChildContent
+</MudTreeViewItem>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool Expanded { get; set; }
+
+    [Parameter]
+    public string? Value { get; set; }
+}

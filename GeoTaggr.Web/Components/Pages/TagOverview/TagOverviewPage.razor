@@ -1,6 +1,7 @@
-﻿@attribute [Route(GtgrRoutes.Tags)]
+﻿@attribute [Route(GtgrRoutes.TagOverview)]
 @inherits GtgrPage
 @using GeoTaggr.Core.Countries
+@using GeoTaggr.Core.Extensions
 @using GeoTaggr.Core.Tags
 @using GeoTaggr.Data.Tags
 @using GeoTaggr.Services
@@ -11,31 +12,10 @@
 @using GeoTaggr.Web.Components.Shared.Maps
 @using GeoTaggr.Web.Components.Shared.Pages
 
-<GtgrPageLayout Title="Tags" Breadcrumbs="@Breadcrumbs">    
+<GtgrPageLayout Title="Tag overview" Breadcrumbs="@Breadcrumbs">    
     <Content>
         <GtgrWidgetContainer>
-            <MudGrid>
-                <MudItem xs="12" md="9">
-                    <GtgrMap Markers="@MapMarkers"></GtgrMap>
-                </MudItem>
-                <MudItem xs="12" md="3">
-                    <CreateTagForm
-                        Countries="@Countries"
-                        CountryOptions="@CountryOptions"
-                        OnTagCreated="@OnTagCreated"
-                        Tags="@Tags"
-                        UserId="@UserId">
-                    </CreateTagForm>
-                </MudItem>
-            </MudGrid>
-        </GtgrWidgetContainer>
-
-        <GtgrWidgetContainer>
-            <TagsTable
-                Countries="@Countries"
-                OnDelete="@OnTagDelete"
-                Tags="@Tags">
-            </TagsTable>
+            <TagSummaryTable Tags="@Tags"></TagSummaryTable>
         </GtgrWidgetContainer>
     </Content>
 </GtgrPageLayout>
@@ -44,18 +24,14 @@
 @inject ITagService TagService
 @code {
     private IReadOnlyCollection<GtgrBreadcrumbItem> Breadcrumbs = new[]
-        {
-        new GtgrBreadcrumbItem("Tags") { Active = true },
-        new GtgrBreadcrumbItem("Overview") { Url = GtgrRoutes.TagOverview }
+    {
+        new GtgrBreadcrumbItem("Tags") { Url = GtgrRoutes.Tags },
+        new GtgrBreadcrumbItem("Overview") { Active = true }
     };
 
     private IReadOnlyDictionary<int, Country>? Countries { get; set; }
 
-    private IReadOnlyCollection<SelectOption>? CountryOptions { get; set; }
-
-    private IReadOnlyCollection<GtgrMapMarker>? MapMarkers { get; set; }
-
-    private IReadOnlyCollection<Tag>? Tags { get; set; }    
+    private IReadOnlyCollection<Tag>? Tags { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
@@ -67,22 +43,14 @@
 
     private async Task LoadCountriesAsync()
     {
-        CountryOptions = null;
         Countries = await CountryService.GetCountryDictionaryAsync(new CountryFilterValues
         {
             IncludeNoCoverage = false
         });
-
-        CountryOptions = Countries
-            .Values
-            .Select(x => new SelectOption(x.CountryId.ToString(), x.Name))
-            .OrderBy(x => x.Text)
-            .ToArray();
     }
 
     private async Task LoadTagsAsync()
     {
-        MapMarkers = null;
         Tags = null;
         if (UserId == null)
         {
@@ -90,10 +58,6 @@
         }
 
         Tags = await TagService.GetTagsAsync(new TagFilter(UserId.Value));
-        MapMarkers = Tags
-            .Where(x => x.Location != null)
-            .Select(x => new GtgrMapMarker(x.Lat ?? 0, x.Long ?? 0))
-            .ToArray();
     }
 
     private async Task OnTagDelete(int tagId)

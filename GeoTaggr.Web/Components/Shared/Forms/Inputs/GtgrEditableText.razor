@@ -1,0 +1,29 @@
+﻿@using GeoTaggr.Web.Components.Shared.Icons
+
+@*****WIP*****@
+
+@if (EditMode)
+{
+    <GtgrTextInput
+        Inline="true"
+        Value="@Value">
+    </GtgrTextInput>
+}
+else
+{
+    <GtgrFlexContainer>
+        <span>@Value</span>
+        <GtgrIconButton 
+            Type="GtgrIconType.Edit" 
+            Size="GtgrButtonSize.Small"
+            OnClick="() => EditMode = true">
+        </GtgrIconButton>
+    </GtgrFlexContainer>    
+}
+
+@code {
+    [Parameter]
+    public string? Value { get; set; }
+
+    private bool EditMode { get; set; }
+}

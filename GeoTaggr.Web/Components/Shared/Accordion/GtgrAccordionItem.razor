@@ -1,0 +1,24 @@
+﻿<MudExpansionPanel
+    Class="@Class" 
+    IsInitiallyExpanded="@Expanded">
+    <TitleContent>
+        @Heading
+    </TitleContent>
+    <ChildContent>
+        @Content
+    </ChildContent>
+</MudExpansionPanel>
+
+@code {
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public RenderFragment? Content { get; set; }
+
+    [Parameter]
+    public bool Expanded { get; set; }
+
+    [Parameter]
+    public RenderFragment? Heading { get; set; }
+}
