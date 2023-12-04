@@ -1,0 +1,66 @@
+﻿@inherits GtgrComponentBase
+@using GeoTaggr.Core
+@using GeoTaggr.Services
+@using GeoTaggr.Services.Countries
+@using GeoTaggr.Web.Components.Shared.Buttons
+@using GeoTaggr.Web.Components.Shared.Forms
+@using GeoTaggr.Web.Components.Shared.Forms.Inputs
+@using GeoTaggr.Web.Components.Shared.Messages
+
+@if (Model == null)
+{
+    return;
+}
+
+<GtgrForm
+    Model="@Model"
+    OnSubmit="@OnSubmitted">
+    <GtgrFormGroup>
+        <GtgrTextInput
+            Label="Name"
+            For="@(() => Model.Name)"
+            @bind-Value="@Model.Name"
+            Required="true">
+        </GtgrTextInput>
+    </GtgrFormGroup>
+    <GtgrFormGroup>
+        <GtgrButton 
+            Type="@GtgrButtonType.Primary" 
+            Submit="true">
+            Update
+        </GtgrButton>
+    </GtgrFormGroup>
+</GtgrForm>
+
+@inject ICountryService CountryService
+@code {
+    [Parameter]
+    public Country? Country { get; set; }
+
+    [Parameter]
+    public EventCallback OnCountryUpdate { get; set; }
+
+    private CountryFormModel? Model { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        Model = Country != null
+            ? new(Country.Name)
+            : null;
+    }
+
+    private async Task OnSubmitted()
+    {
+        if (Any.IsNull(Country, Model))
+        {
+            return;
+        }
+
+        ServiceResult result = await CountryService.UpdateCountryAsync(Country.CountryId, Model.Name);
+        await ShowMessageAsync(result.Message);
+
+        await OnCountryUpdate.InvokeAsync();
+    }
+}

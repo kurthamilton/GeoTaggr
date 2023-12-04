@@ -1,0 +1,17 @@
+﻿@inherits GtgrIconBase
+
+@if (!string.IsNullOrEmpty(HoverIcon))
+{
+    <MudTooltip Text="@Tooltip">
+        <span class="hover-toggle">
+            <MudIcon Icon="@TypeIcon" Class="hover-hide" Color="@IconColor"></MudIcon>
+            <MudIcon Icon="@HoverIcon" Class="hover-show" Color="@IconColor"></MudIcon>
+        </span>
+    </MudTooltip>
+}
+else
+{
+    <MudTooltip Text="@Tooltip">
+        <MudIcon Icon="@TypeIcon" Color="@IconColor" Title="@Tooltip"></MudIcon>
+    </MudTooltip>
+}

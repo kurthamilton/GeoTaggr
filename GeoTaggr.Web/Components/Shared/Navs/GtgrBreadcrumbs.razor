@@ -1,0 +1,19 @@
+﻿@if (MudBreadcrumbs == null)
+{
+    return;
+}
+
+<MudPaper Class="mb-3">
+    <MudBreadcrumbs 
+        Class="gtgr-breadcrumbs"
+        Items="@MudBreadcrumbs">
+    </MudBreadcrumbs>
+</MudPaper>
+@code {
+    [Parameter]
+    public IReadOnlyCollection<GtgrNavItem>? Items { get; set; }
+
+    private List<BreadcrumbItem>? MudBreadcrumbs => Items
+        ?.Select(x => new BreadcrumbItem(x.Text, x.Url, disabled: string.IsNullOrEmpty(x.Url)))
+        .ToList();
+}

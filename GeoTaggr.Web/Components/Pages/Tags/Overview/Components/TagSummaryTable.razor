@@ -1,0 +1,52 @@
+﻿@using GeoTaggr.Core.Extensions
+@using GeoTaggr.Core.Tags
+@using GeoTaggr.Web.Components.Shared.Accordion
+@using GeoTaggr.Web.Components.Shared.TreeView
+
+@if (Overview == null)
+{
+    return;
+}
+
+<GtgrAccordion>
+    @foreach (string name in Overview.Keys.OrderBy(x => x))
+    {
+        <TagSummaryTableAccordionItem
+            Name="@name"
+            Values="@Overview[name]">
+        </TagSummaryTableAccordionItem>
+    }
+</GtgrAccordion>
+
+@code {
+    [Parameter]
+    public IReadOnlyCollection<Tag>? Tags { get; set; }
+
+    private IReadOnlyDictionary<string, IReadOnlyDictionary<string, IReadOnlyCollection<Tag>>>? Overview { get; set; } 
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        BuildOverview();
+    }
+
+    private static IReadOnlyDictionary<string, IReadOnlyCollection<Tag>> GroupByValue(IEnumerable<Tag> tags)
+    {
+        return tags.ToGroupedReadOnlyDictionary(x => x.Value, StringComparer.InvariantCultureIgnoreCase);
+    }
+
+    private void BuildOverview()
+    {
+        if (Tags == null)
+        {
+            Overview = null;
+            return;
+        }        
+
+        Overview = Tags
+            .GroupBy(x => x.Name, StringComparer.InvariantCultureIgnoreCase)
+            .ToDictionary(x => x.Key, x => GroupByValue(x))
+            .AsReadOnly();
+    }
+}

@@ -1,0 +1,122 @@
+﻿@attribute [Route(GtgrRoutes.Tags)]
+@inherits GtgrPage
+@using GeoTaggr.Core.Countries
+@using GeoTaggr.Core.Tags
+@using GeoTaggr.Data.Tags
+@using GeoTaggr.Services
+@using GeoTaggr.Services.Countries
+@using GeoTaggr.Services.Tags
+@using GeoTaggr.Web.Components.Shared.Forms.Selects
+@using GeoTaggr.Web.Components.Shared.Maps
+@using GeoTaggr.Web.Components.Shared.Navs
+@using GeoTaggr.Web.Components.Shared.Pages
+@using GeoTaggr.Web.Components.Shared.Tabs
+
+<GtgrPageLayout 
+    Title="Tags" 
+    SuppressHeading="true"
+    NavItems="@NavItems" 
+    NavType="@GtgrNavType.Tabs">        
+    <Content>
+        <GtgrWidgetContainer>
+            <MudGrid>
+                <MudItem xs="12" md="9">
+                    <GtgrMap Markers="@MapMarkers"></GtgrMap>
+                </MudItem>
+                <MudItem xs="12" md="3">
+                    <CreateTagForm
+                        Countries="@Countries"
+                        CountryOptions="@CountryOptions"
+                        OnTagCreated="@OnTagCreated"
+                        Tags="@Tags"
+                        UserId="@UserId">
+                    </CreateTagForm>
+                </MudItem>
+            </MudGrid>
+        </GtgrWidgetContainer>
+
+        <GtgrWidgetContainer>
+            <TagsTable
+                Countries="@Countries"
+                OnDelete="@OnTagDelete"
+                Tags="@Tags">
+            </TagsTable>
+        </GtgrWidgetContainer>
+    </Content>
+</GtgrPageLayout>
+
+@inject ICountryService CountryService
+@inject ITagService TagService
+@code {
+    private static IReadOnlyCollection<GtgrNavItem> NavItems { get; } = new[]
+    {
+        new GtgrNavItem("Tags"),
+        new GtgrNavItem("Overview", GtgrRoutes.TagOverview)
+    };
+
+    private IReadOnlyDictionary<int, Country>? Countries { get; set; }
+
+    private IReadOnlyCollection<SelectOption>? CountryOptions { get; set; }
+
+    private IReadOnlyCollection<GtgrMapMarker>? MapMarkers { get; set; }
+
+    private IReadOnlyCollection<Tag>? Tags { get; set; }    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await LoadCountriesAsync();
+        await LoadTagsAsync();
+    }
+
+    private async Task LoadCountriesAsync()
+    {
+        CountryOptions = null;
+        Countries = await CountryService.GetCountryDictionaryAsync(new CountryFilterValues
+        {
+            IncludeNoCoverage = false
+        });
+
+        CountryOptions = Countries
+            .Values
+            .Select(x => new SelectOption(x.CountryId.ToString(), x.Name))
+            .OrderBy(x => x.Text)
+            .ToArray();
+    }
+
+    private async Task LoadTagsAsync()
+    {
+        MapMarkers = null;
+        Tags = null;
+        if (UserId == null)
+        {
+            return;
+        }
+
+        Tags = await TagService.GetTagsAsync(new TagFilter(UserId.Value));
+        MapMarkers = Tags
+            .Where(x => x.Location != null)
+            .Select(x => new GtgrMapMarker(x.Lat ?? 0, x.Long ?? 0))
+            .ToArray();
+    }
+
+    private async Task OnTagDelete(int tagId)
+    {
+        if (UserId == null)
+        {
+            return;
+        }
+
+        ServiceResult result = await TagService.DeleteTagAsync(tagId, UserId.Value);
+        if (result.Success)
+        {
+            await LoadTagsAsync();
+        }
+    }
+
+    private async Task OnTagCreated()
+    {
+        await LoadTagsAsync();
+    }
+}

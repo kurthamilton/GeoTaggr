@@ -1,0 +1,89 @@
+﻿@using GeoTaggr.Core
+@using GeoTaggr.Core.Countries
+@using GeoTaggr.Core.Tags
+@using GeoTaggr.Web.Components.Shared.Buttons
+@using GeoTaggr.Web.Components.Shared.Countries
+@using GeoTaggr.Web.Components.Shared.Icons
+@using GeoTaggr.Web.Components.Shared.Links
+@using GeoTaggr.Web.Components.Shared.Tables
+
+@if (Any.IsNull(Countries, OrderedTags))
+{
+    return;
+}
+
+<GtgrTable>
+    <thead>
+        <tr>
+            <th>Country</th>
+            <th>Name</th>
+            <th>Value</th>
+            <th>Location</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (Tag tag in OrderedTags)
+        {
+            Country country = Countries[tag.CountryId];
+
+            <tr>
+                <td>
+                    <GtgrLink Href="@GtgrRoutes.GetCountryUrl(country)">
+                        <GtgrCountryWithFlag Country="@country">
+                        </GtgrCountryWithFlag>
+                    </GtgrLink>
+                </td>
+                <td>@tag.Name</td>
+                <td>@tag.Value</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(tag.Url))
+                    {
+                        <GtgrLink Href="@tag.Url">
+                            @if (tag.Location != null)
+                            {
+                                @tag.Location.ToString()
+                            }
+                            else
+                            {
+                                @:Location
+                            }
+                        </GtgrLink>
+                    }
+                </td>
+                <td>
+                    <GtgrIconButton 
+                        Type="@GtgrIconType.Delete"
+                        Size="GtgrButtonSize.Small"
+                        Confirm="Are you sure you want to delete this tag?"
+                        OnClick="@(() => OnDelete.InvokeAsync(tag.TagId))">
+                    </GtgrIconButton>
+                </td>
+            </tr>
+        }
+    </tbody>
+</GtgrTable>
+
+    @code {
+    [Parameter]
+    public IReadOnlyDictionary<int, Country>? Countries { get; set; }
+
+    [Parameter]
+    public EventCallback<int> OnDelete { get; set; }
+
+    [Parameter]
+    public IReadOnlyCollection<Tag>? Tags { get; set; }
+
+    private IReadOnlyCollection<Tag>? OrderedTags { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        OrderedTags = Tags
+            ?.OrderBy(x => Countries?.ContainsKey(x.CountryId) == true ? Countries[x.CountryId]?.Name : "")
+            .ThenBy(x => x.Name)
+            .ThenBy(x => x.Value)
+            .ToArray();
+    }
+}

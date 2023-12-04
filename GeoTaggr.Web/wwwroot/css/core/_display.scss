@@ -1,0 +1,13 @@
+.hover-toggle {
+    &:hover {
+        .hover-hide {
+            display: none;
+        }
+    }
+
+    &:not(:hover) {
+        .hover-show {
+            display: none;
+        }
+    }    
+}

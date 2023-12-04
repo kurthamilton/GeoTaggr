@@ -1,0 +1,48 @@
+﻿@typeparam T
+
+<EditForm EditContext="@EditContext" OnValidSubmit="@OnSubmitted" class="@TypeClass">
+    <DataAnnotationsValidator />
+    @ChildContent
+</EditForm>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }    
+
+    [Parameter]
+    public T? Model { get; set; }
+
+    [Parameter]
+    public EventCallback OnSubmit { get; set; }
+
+    [Parameter]
+    public GtgrFormType Type { get; set; }
+
+    private EditContext? EditContext { get; set; }
+
+    private string? TypeClass => Type switch
+    {
+        GtgrFormType.Inline => "gtgr-form-inline",
+        _ => null
+    };
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (EditContext == null && Model != null)
+        {
+            EditContext = new(Model);
+        }        
+    }
+
+    private async Task OnSubmitted()
+    {
+        if (EditContext == null || !EditContext.Validate())
+        {
+            return;
+        }
+
+        await OnSubmit.InvokeAsync();
+    }
+}

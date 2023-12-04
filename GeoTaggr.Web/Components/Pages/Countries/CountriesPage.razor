@@ -1,0 +1,45 @@
+﻿@attribute [Route(GtgrRoutes.Countries)]
+@inherits GtgrPage
+@using GeoTaggr.Core.Countries
+@using GeoTaggr.Services.Countries
+@using GeoTaggr.Web.Components.Shared.Grids
+@using GeoTaggr.Web.Components.Shared.Pages
+
+<GtgrPageLayout Title="Countries">    
+    <Content>
+        <GtgrWidgetContainer>
+            <CountryFilter OnChange="@OnFiltersChanged">
+            </CountryFilter>
+        </GtgrWidgetContainer>
+
+        <CountriesGrid Countries="@Countries">
+        </CountriesGrid>
+    </Content>
+</GtgrPageLayout>
+
+
+@inject ICountryService CountryService
+@code {
+    private IReadOnlyCollection<Country>? Countries { get; set; }    
+
+    private CountryFilterValues Filter { get; set; } = new CountryFilterValues();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await LoadCountriesAsync();
+    }
+
+    private async Task LoadCountriesAsync()
+    {
+        Countries = null;
+        Countries = await CountryService.GetCountriesAsync(Filter);
+    }    
+
+    private async Task OnFiltersChanged(CountryFilterValues filter)
+    {
+        Filter = filter;
+        await LoadCountriesAsync();
+    }
+}

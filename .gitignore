@@ -1,0 +1,9 @@
+/.vs
+*.user
+bin
+obj
+
+*.sqlite3
+
+/GeoTaggr.Web/wwwroot/lib
+/GeoTaggr.Web/appsettings.Development.json

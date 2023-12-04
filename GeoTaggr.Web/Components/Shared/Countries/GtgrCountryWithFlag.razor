@@ -1,0 +1,21 @@
+﻿@using GeoTaggr.Core.Countries
+
+@if (Country == null)
+{
+    return;
+}
+
+<GtgrFlexContainer>
+    <span class="mr-2">
+        @Country.Name
+    </span>
+    <GtgrCountryFlag
+        IsoCode2="@Country.IsoCode2"
+        Name="@Country.Name">
+    </GtgrCountryFlag>
+</GtgrFlexContainer>
+
+@code {
+    [Parameter]
+    public Country? Country { get; set; }
+}

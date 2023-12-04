@@ -1,0 +1,21 @@
+﻿@if (string.IsNullOrEmpty(IsoCode2))
+{
+    return;
+}
+
+<img src="@Src"
+     srcset="@SrcSet 2x"
+     width="20"
+     alt="@Name">
+
+@code {
+    [Parameter]
+    public string? Name { get; set; }
+
+    [Parameter]
+    public string? IsoCode2 { get; set; }    
+
+    private string Src => $"https://flagcdn.com/w20/{IsoCode2?.ToLowerInvariant()}.png";
+
+    private string SrcSet => $"https://flagcdn.com/w40/{IsoCode2?.ToLowerInvariant()}.png";
+}

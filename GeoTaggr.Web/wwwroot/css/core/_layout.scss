@@ -1,0 +1,8 @@
+:root {
+    --gtgr-spacing: 1rem;
+}
+
+.gtgr-spacer-y {
+    margin-top: var(--gtgr-spacing);
+    margin-bottom: var(--gtgr-spacing);
+}

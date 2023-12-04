@@ -1,0 +1,26 @@
+﻿<MudTooltip Text="@Tooltip">
+    <MudLink Href="@Href" Target="@Target" Class="@Class">
+        @ChildContent 
+    </MudLink>
+</MudTooltip>
+
+@code {
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Href { get; set; }
+
+    private bool NewWindow => Href?.StartsWith("/") != true;
+
+    private string? Target => NewWindow ? "_blank" : null;
+
+    private string? Tooltip => Target?.ToLowerInvariant() switch
+    {
+        "_blank" => "Open in new tab",
+        _ => null
+    };
+}

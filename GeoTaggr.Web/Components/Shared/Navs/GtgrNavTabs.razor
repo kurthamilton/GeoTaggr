@@ -1,0 +1,22 @@
+﻿@using GeoTaggr.Core.Extensions
+@using GeoTaggr.Web.Components.Shared.Tabs
+
+<GtgrTabs ActiveIndex="@ActiveIndex" Class="mb-3">
+    @foreach (GtgrNavItem item in Items)
+    {
+        <GtgrTab 
+            Text="@item.Text" 
+            Url="@item.Url">
+        </GtgrTab>
+    }    
+</GtgrTabs>
+
+@code {
+    [Parameter]
+    public required string Current { get; set; }
+
+    [Parameter]
+    public required IReadOnlyCollection<GtgrNavItem> Items { get; set; }
+
+    private int ActiveIndex => Items.FindIndex(x => string.IsNullOrEmpty(x.Url));
+}

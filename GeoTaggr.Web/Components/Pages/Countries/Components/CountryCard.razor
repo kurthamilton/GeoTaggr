@@ -1,0 +1,50 @@
+﻿@using GeoTaggr.Core.Countries
+@using GeoTaggr.Web.Components.Shared.Buttons
+@using GeoTaggr.Web.Components.Shared.Cards
+@using GeoTaggr.Web.Components.Shared.Countries
+@using GeoTaggr.Web.Components.Shared.Links
+
+@if (Country == null)
+{
+    return;
+}
+
+<GtgrCard Id="@Country.IsoCode2" Outlined="true">    
+    <Content>
+        <GtgrFlexContainer>
+            <div class="mr-auto">
+                <GtgrLink Href="@GtgrRoutes.GetCountryUrl(@Country)">
+                    @Country.Name
+                </GtgrLink>
+            </div>
+            <div>
+                <GtgrCountryFlag IsoCode2="@Country.IsoCode2" Name="@Country.Name">
+                </GtgrCountryFlag>
+            </div>
+        </GtgrFlexContainer>
+        @if (!Country.HasCoverage)
+        {
+            <div>
+                <GtgrButton
+                    OnClick="@OnIncludeButtonClicked"
+                    Size="GtgrButtonSize.Small"
+                    Type="GtgrButtonType.Primary">
+                    Include
+                </GtgrButton>
+            </div>
+        }
+    </Content>
+</GtgrCard>
+
+@code {
+    [Parameter]
+    public Country? Country { get; set; }
+
+    [Parameter]
+    public EventCallback<Country?> OnInclude { get; set; }
+
+    private async Task OnIncludeButtonClicked()
+    {
+        await OnInclude.InvokeAsync(Country);
+    }
+}

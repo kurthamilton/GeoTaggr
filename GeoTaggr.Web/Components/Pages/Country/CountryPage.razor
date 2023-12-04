@@ -1,0 +1,54 @@
+﻿@attribute [Route(GtgrRoutes.Country)]
+@inherits GtgrPage
+@using GeoTaggr.Services.Countries
+@using GeoTaggr.Web.Components.Shared.Navs
+@using GeoTaggr.Web.Components.Shared.Countries
+
+<GtgrPageLayout Title="@(Country?.Name ?? "Country")" NavItems="@NavItems">    
+    <Heading>
+        <GtgrCountryWithFlag Country="@Country"></GtgrCountryWithFlag>
+    </Heading>
+    <Content>
+        <CountryForm 
+            Country="@Country"
+            OnCountryUpdate="@OnCountryUpdated">
+        </CountryForm>
+    </Content>
+</GtgrPageLayout>
+
+@inject ICountryService CountryService
+@code {
+    [Parameter]
+    public string IsoCode2 { get; set; } = default!;
+
+    private IReadOnlyCollection<GtgrNavItem>? NavItems { get; set; }
+
+    private Country? Country { get; set; }    
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await LoadCountryAsync();
+        if (Country == null)
+        {
+            return;
+        }        
+    }
+
+    private async Task LoadCountryAsync()
+    {
+        Country = await CountryService.GetCountryByIsoCode2Async(IsoCode2);
+        
+        NavItems = new[]
+        {
+            new GtgrNavItem("Countries") { Url = GtgrRoutes.GetCountriesUrl(Country) },
+            new GtgrNavItem(Country?.Name ?? "NOT FOUND")
+        };
+    }
+
+    private async Task OnCountryUpdated()
+    {
+        await LoadCountryAsync();
+    }
+}

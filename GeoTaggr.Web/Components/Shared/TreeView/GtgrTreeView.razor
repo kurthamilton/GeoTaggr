@@ -1,0 +1,8 @@
+﻿<MudTreeView T="string">
+    @ChildContent
+</MudTreeView>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

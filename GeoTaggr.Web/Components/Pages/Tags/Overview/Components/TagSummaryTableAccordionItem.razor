@@ -1,0 +1,34 @@
+﻿@using GeoTaggr.Core.Tags
+@using GeoTaggr.Web.Components.Shared.Accordion
+@using GeoTaggr.Web.Components.Shared.Forms.Inputs
+
+<GtgrAccordionItem>
+    <Heading>                
+        <GtgrFlexContainer>
+            <span class="mr-1">@Name</span>            
+        </GtgrFlexContainer>        
+    </Heading>
+    <Content>
+        <GtgrAccordion>
+            @foreach (string value in Values.Keys.OrderBy(x => x))
+            {
+                <GtgrAccordionItem>
+                    <Heading>
+                        @value
+                    </Heading>
+                    <Content>
+                        Content
+                    </Content>
+                </GtgrAccordionItem>
+            }
+        </GtgrAccordion>
+    </Content>
+</GtgrAccordionItem>
+
+@code {
+    [Parameter]
+    public required string Name { get; set; }
+
+    [Parameter]
+    public required IReadOnlyDictionary<string, IReadOnlyCollection<Tag>> Values { get; set; }
+}

@@ -1,0 +1,22 @@
+﻿@using GeoTaggr.Web.Components.Shared.Buttons
+
+<GtgrButton
+    Attributes="@Attributes"
+    Class="dropdown-toggle"
+    Type="@Type">
+    @ChildContent
+</GtgrButton>
+    
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public GtgrButtonType Type { get; set; }
+    
+    private IDictionary<string, object> Attributes { get; } = new Dictionary<string, object>
+    {
+        { "data-bs-toggle", "dropdown" }
+    };
+}

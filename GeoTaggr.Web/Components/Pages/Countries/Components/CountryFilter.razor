@@ -1,0 +1,48 @@
+@using GeoTaggr.Web.Components.Shared.Cards
+@using GeoTaggr.Web.Components.Shared.Forms
+@using GeoTaggr.Web.Components.Shared.Forms.Checkboxes
+@using GeoTaggr.Services.Countries
+@using GeoTaggr.Web.Components.Shared.Forms.Inputs
+
+<GtgrCard Outlined="true">
+    <Content>
+        <GtgrForm Model="@Model" Type="@GtgrFormType.Inline">
+            <GtgrFormGroup>
+                <GtgrCheckbox 
+                    Label="Show all"
+                    OnChange="@OnShowAllChanged">
+                </GtgrCheckbox>
+            </GtgrFormGroup>
+            <GtgrFormGroup>
+                <GtgrTextInput
+                    Label="Name"
+                    ValueChanged="@OnNameInput">
+                </GtgrTextInput>
+            </GtgrFormGroup>
+        </GtgrForm>
+    </Content>    
+</GtgrCard>
+
+@code {
+    [Parameter]
+    public EventCallback<CountryFilterValues> OnChange { get; set; }
+
+    private CountryFilterValues Model { get; } = new();
+
+    private async Task OnNameInput(string? value)
+    {
+        Model.Name = value;
+        await TriggerChangeAsync();
+    }
+
+    private async Task OnShowAllChanged(bool showAll)
+    {
+        Model.IncludeNoCoverage = showAll;
+        await TriggerChangeAsync();
+    }
+
+    private async Task TriggerChangeAsync()
+    {
+        await OnChange.InvokeAsync(Model);
+    }    
+}

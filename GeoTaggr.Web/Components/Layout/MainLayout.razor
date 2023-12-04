@@ -1,0 +1,22 @@
+﻿@using GeoTaggr.Web.Components.Shared.Navbar
+@inherits LayoutComponentBase
+
+<MudThemeProvider IsDarkMode="true" />
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <GtgrNavbar></GtgrNavbar>
+
+    <MudMainContent>
+        <GtgrContainer>
+            @Body
+        </GtgrContainer>
+    </MudMainContent>
+</MudLayout>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>

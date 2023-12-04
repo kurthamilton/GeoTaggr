@@ -1,0 +1,80 @@
+@inherits GtgrComponentBase
+@using MudSize = MudBlazor.Size
+
+<MudButton 
+    UserAttributes="@Attributes?.ToDictionary()"
+    Class="@Class"
+    Color="@ButtonColor"
+    Href="@Href"
+    Size="@ButtonSize"
+    Variant="@ButtonVariant"
+    OnClick="@OnButtonClicked"
+    ButtonType="@ButtonType">
+    @ChildContent
+</MudButton>
+
+@inject IDialogService DialogService
+@inject IJSRuntime JSRuntime
+@code {
+    [Parameter]
+    public IDictionary<string, object>? Attributes { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+
+    [Parameter]
+    public string? Confirm { get; set; }
+
+    [Parameter]
+    public string? Href { get; set; }
+
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public GtgrButtonSize Size {get; set;}
+
+    [Parameter]
+    public bool Submit { get; set; }
+
+    [Parameter]
+    public GtgrButtonType Type { get; set; }
+
+    private Color ButtonColor => Type switch
+    {
+        GtgrButtonType.Primary => Color.Primary,
+        GtgrButtonType.OutlinePrimary => Color.Primary,
+        GtgrButtonType.Secondary => Color.Secondary,
+        GtgrButtonType.OutlineSecondary => Color.Secondary,
+        _ => Color.Inherit
+    };
+
+    private MudSize ButtonSize => Size.ToMudSize();
+
+    private ButtonType ButtonType => Submit
+        ? ButtonType.Submit
+        : ButtonType.Button;
+
+    private Variant ButtonVariant => Type switch
+    {
+        GtgrButtonType.Primary => Variant.Filled,
+        GtgrButtonType.OutlinePrimary => Variant.Outlined,
+        GtgrButtonType.Secondary => Variant.Filled,
+        GtgrButtonType.OutlineSecondary => Variant.Outlined,
+        _ => Variant.Text
+    };
+
+    private async Task OnButtonClicked()
+    {
+        bool confirm = await ConfirmAsync("Delete", Confirm, "Delete");
+        if (!confirm)
+        {
+            return;
+        }
+
+        await OnClick.InvokeAsync();
+    }
+}

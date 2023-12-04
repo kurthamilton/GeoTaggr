@@ -1,0 +1,14 @@
+﻿<MudTabs ActivePanelIndex="@ActiveIndex" Class="@Class">
+    @ChildContent
+</MudTabs>
+
+@code {
+    [Parameter]
+    public int ActiveIndex { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public string? Class { get; set; }
+}

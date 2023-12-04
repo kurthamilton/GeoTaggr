@@ -1,0 +1,20 @@
+.navbar-link {
+    --gtgr-navbar-link-border-y-width: 3px;
+    --gtgr-navbar-link-padding-x: 1rem;
+    height: 100%;
+    padding-top: 0;
+    padding-bottom: 0;
+    border-radius: 0;
+    border-top: var(--gtgr-navbar-link-border-y-width) solid transparent;
+    border-bottom: var(--gtgr-navbar-link-border-y-width) solid transparent;
+    padding-left: var(--gtgr-navbar-link-padding-x);
+    padding-right: var(--gtgr-navbar-link-padding-x);
+
+    &:hover {
+        background-color: var(--gtgr-header-bg-hover);
+    }
+
+    &.active {
+        border-bottom-color: var(--gtgr-color-primary);
+    }
+}

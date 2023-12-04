@@ -1,0 +1,86 @@
+﻿@attribute [Route(GtgrRoutes.TagOverview)]
+@inherits GtgrPage
+@using GeoTaggr.Core.Countries
+@using GeoTaggr.Core.Extensions
+@using GeoTaggr.Core.Tags
+@using GeoTaggr.Data.Tags
+@using GeoTaggr.Services
+@using GeoTaggr.Services.Countries
+@using GeoTaggr.Services.Tags
+@using GeoTaggr.Web.Components.Shared.Forms.Selects
+@using GeoTaggr.Web.Components.Shared.Maps
+@using GeoTaggr.Web.Components.Shared.Navs
+@using GeoTaggr.Web.Components.Shared.Pages
+@using GeoTaggr.Web.Components.Shared.Tabs
+
+<GtgrPageLayout 
+    Title="Tag overview" 
+    SuppressHeading="true"
+    NavItems="@NavItems" 
+    NavType="@GtgrNavType.Tabs">
+    <Content>
+        <GtgrWidgetContainer>
+            <TagSummaryTable Tags="@Tags"></TagSummaryTable>
+        </GtgrWidgetContainer>
+    </Content>
+</GtgrPageLayout>
+
+@inject ICountryService CountryService
+@inject ITagService TagService
+@code {
+    private static IReadOnlyCollection<GtgrNavItem> NavItems { get; } = new[]
+    {
+        new GtgrNavItem("Tags", GtgrRoutes.Tags),
+        new GtgrNavItem("Overview")
+    };
+
+    private IReadOnlyDictionary<int, Country>? Countries { get; set; }    
+
+    private IReadOnlyCollection<Tag>? Tags { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        await LoadCountriesAsync();
+        await LoadTagsAsync();
+    }
+
+    private async Task LoadCountriesAsync()
+    {
+        Countries = await CountryService.GetCountryDictionaryAsync(new CountryFilterValues
+        {
+            IncludeNoCoverage = false
+        });
+    }
+
+    private async Task LoadTagsAsync()
+    {
+        Tags = null;
+        if (UserId == null)
+        {
+            return;
+        }
+
+        Tags = await TagService.GetTagsAsync(new TagFilter(UserId.Value));
+    }
+
+    private async Task OnTagDelete(int tagId)
+    {
+        if (UserId == null)
+        {
+            return;
+        }
+
+        ServiceResult result = await TagService.DeleteTagAsync(tagId, UserId.Value);
+        if (result.Success)
+        {
+            await LoadTagsAsync();
+        }
+    }
+
+    private async Task OnTagCreated()
+    {
+        await LoadTagsAsync();
+    }
+}
