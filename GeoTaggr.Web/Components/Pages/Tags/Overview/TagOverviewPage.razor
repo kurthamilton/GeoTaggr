@@ -7,12 +7,17 @@
 @using GeoTaggr.Services
 @using GeoTaggr.Services.Countries
 @using GeoTaggr.Services.Tags
-@using GeoTaggr.Web.Components.Shared.Breadcrumbs
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
 @using GeoTaggr.Web.Components.Shared.Maps
+@using GeoTaggr.Web.Components.Shared.Navs
 @using GeoTaggr.Web.Components.Shared.Pages
+@using GeoTaggr.Web.Components.Shared.Tabs
 
-<GtgrPageLayout Title="Tag overview" Breadcrumbs="@Breadcrumbs">    
+<GtgrPageLayout 
+    Title="Tag overview" 
+    SuppressHeading="true"
+    NavItems="@NavItems" 
+    NavType="@GtgrNavType.Tabs">
     <Content>
         <GtgrWidgetContainer>
             <TagSummaryTable Tags="@Tags"></TagSummaryTable>
@@ -23,13 +28,13 @@
 @inject ICountryService CountryService
 @inject ITagService TagService
 @code {
-    private IReadOnlyCollection<GtgrBreadcrumbItem> Breadcrumbs = new[]
+    private static IReadOnlyCollection<GtgrNavItem> NavItems { get; } = new[]
     {
-        new GtgrBreadcrumbItem("Tags") { Url = GtgrRoutes.Tags },
-        new GtgrBreadcrumbItem("Overview") { Active = true }
+        new GtgrNavItem("Tags", GtgrRoutes.Tags),
+        new GtgrNavItem("Overview")
     };
 
-    private IReadOnlyDictionary<int, Country>? Countries { get; set; }
+    private IReadOnlyDictionary<int, Country>? Countries { get; set; }    
 
     private IReadOnlyCollection<Tag>? Tags { get; set; }
 

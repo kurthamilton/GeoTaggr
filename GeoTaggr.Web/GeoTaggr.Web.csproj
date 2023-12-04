@@ -29,4 +29,8 @@
     <ProjectReference Include="..\GeoTaggr.Services\GeoTaggr.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\Shared\Breadcrumbs\" />
+  </ItemGroup>
+
 </Project>

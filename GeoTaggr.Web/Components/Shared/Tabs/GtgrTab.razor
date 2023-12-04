@@ -1,0 +1,39 @@
+﻿@using GeoTaggr.Web.Components.Shared.Links
+
+<MudTabPanel OnClick="@OnTabClicked">
+    <TabContent>
+        @if (!string.IsNullOrEmpty(Url))
+        {
+             <a href="@Url">
+                @Text
+            </a>
+        }    
+        else
+        {
+            <span>@Text</span>
+        }
+    </TabContent>
+</MudTabPanel>
+
+@inject NavigationManager NavigationManager
+@code {
+    [Parameter]
+    public EventCallback OnClick { get; set; }
+
+    [Parameter]
+    public required string Text { get; set; }
+
+    [Parameter]
+    public string? Url { get; set; }
+
+    private async Task OnTabClicked()
+    {
+        if (!string.IsNullOrEmpty(Url))
+        {
+            NavigationManager.NavigateTo(Url);
+            return;
+        }
+
+        await OnClick.InvokeAsync();
+    }
+}

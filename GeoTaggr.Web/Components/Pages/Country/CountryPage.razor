@@ -1,10 +1,10 @@
 ﻿@attribute [Route(GtgrRoutes.Country)]
 @inherits GtgrPage
 @using GeoTaggr.Services.Countries
-@using GeoTaggr.Web.Components.Shared.Breadcrumbs
+@using GeoTaggr.Web.Components.Shared.Navs
 @using GeoTaggr.Web.Components.Shared.Countries
 
-<GtgrPageLayout Title="@(Country?.Name ?? "Country")" Breadcrumbs="@Breadcrumbs">    
+<GtgrPageLayout Title="@(Country?.Name ?? "Country")" NavItems="@NavItems">    
     <Heading>
         <GtgrCountryWithFlag Country="@Country"></GtgrCountryWithFlag>
     </Heading>
@@ -21,7 +21,7 @@
     [Parameter]
     public string IsoCode2 { get; set; } = default!;
 
-    private IReadOnlyCollection<GtgrBreadcrumbItem>? Breadcrumbs { get; set; }
+    private IReadOnlyCollection<GtgrNavItem>? NavItems { get; set; }
 
     private Country? Country { get; set; }    
 
@@ -40,10 +40,10 @@
     {
         Country = await CountryService.GetCountryByIsoCode2Async(IsoCode2);
         
-        Breadcrumbs = new[]
+        NavItems = new[]
         {
-            new GtgrBreadcrumbItem("Countries") { Url = GtgrRoutes.GetCountriesUrl(Country) },
-            new GtgrBreadcrumbItem(Country?.Name ?? "NOT FOUND")
+            new GtgrNavItem("Countries") { Url = GtgrRoutes.GetCountriesUrl(Country) },
+            new GtgrNavItem(Country?.Name ?? "NOT FOUND")
         };
     }
 

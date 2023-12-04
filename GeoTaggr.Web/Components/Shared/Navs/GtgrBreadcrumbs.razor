@@ -11,9 +11,9 @@
 </MudPaper>
 @code {
     [Parameter]
-    public IReadOnlyCollection<GtgrBreadcrumbItem>? Breadcrumbs { get; set; }
+    public IReadOnlyCollection<GtgrNavItem>? Items { get; set; }
 
-    private List<BreadcrumbItem>? MudBreadcrumbs => Breadcrumbs
+    private List<BreadcrumbItem>? MudBreadcrumbs => Items
         ?.Select(x => new BreadcrumbItem(x.Text, x.Url, disabled: string.IsNullOrEmpty(x.Url)))
         .ToList();
 }

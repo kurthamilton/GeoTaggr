@@ -6,12 +6,17 @@
 @using GeoTaggr.Services
 @using GeoTaggr.Services.Countries
 @using GeoTaggr.Services.Tags
-@using GeoTaggr.Web.Components.Shared.Breadcrumbs
 @using GeoTaggr.Web.Components.Shared.Forms.Selects
 @using GeoTaggr.Web.Components.Shared.Maps
+@using GeoTaggr.Web.Components.Shared.Navs
 @using GeoTaggr.Web.Components.Shared.Pages
+@using GeoTaggr.Web.Components.Shared.Tabs
 
-<GtgrPageLayout Title="Tags" Breadcrumbs="@Breadcrumbs">    
+<GtgrPageLayout 
+    Title="Tags" 
+    SuppressHeading="true"
+    NavItems="@NavItems" 
+    NavType="@GtgrNavType.Tabs">        
     <Content>
         <GtgrWidgetContainer>
             <MudGrid>
@@ -43,10 +48,10 @@
 @inject ICountryService CountryService
 @inject ITagService TagService
 @code {
-    private IReadOnlyCollection<GtgrBreadcrumbItem> Breadcrumbs = new[]
-        {
-        new GtgrBreadcrumbItem("Tags") { Active = true },
-        new GtgrBreadcrumbItem("Overview") { Url = GtgrRoutes.TagOverview }
+    private static IReadOnlyCollection<GtgrNavItem> NavItems { get; } = new[]
+    {
+        new GtgrNavItem("Tags"),
+        new GtgrNavItem("Overview", GtgrRoutes.TagOverview)
     };
 
     private IReadOnlyDictionary<int, Country>? Countries { get; set; }

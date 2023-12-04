@@ -1,19 +1,34 @@
-﻿@using GeoTaggr.Web.Components.Shared.Breadcrumbs
+﻿@using GeoTaggr.Web.Components.Shared.Navs
 @using GeoTaggr.Web.Components.Shared.Pages
 
 <PageTitle>@Title | GeoTaggr</PageTitle>
 
-@if (Breadcrumbs != null)
+@if (NavItems != null)
 {
-    <GtgrBreadcrumbs Breadcrumbs="@Breadcrumbs">
-    </GtgrBreadcrumbs>
+    if (NavType == GtgrNavType.Tabs)
+    {
+        <GtgrNavTabs Items="@NavItems">
+        </GtgrNavTabs>
+    }
+    else
+    {
+        <GtgrBreadcrumbs Items="@NavItems">
+        </GtgrBreadcrumbs>
+    }
+}
+
+@if (PreHeading != null)
+{
+    <div>
+        @PreHeading
+    </div>
 }
 
 @if (Heading != null)
 {
     <GtgrPageHeading>@Heading</GtgrPageHeading>
 }
-else
+else if (!SuppressHeading)
 {
     <GtgrPageHeading>@Title</GtgrPageHeading>
 }
@@ -22,14 +37,23 @@ else
 
 @code {
     [Parameter]
-    public IReadOnlyCollection<GtgrBreadcrumbItem>? Breadcrumbs { get; set; }
-
-    [Parameter]
     public RenderFragment? Content { get; set; }
 
     [Parameter]
     public RenderFragment? Heading { get; set; }
 
     [Parameter]
-    public string? Title { get; set; }
+    public IReadOnlyCollection<GtgrNavItem>? NavItems { get; set; }
+
+    [Parameter]
+    public GtgrNavType? NavType { get; set; }
+
+    [Parameter]
+    public RenderFragment? PreHeading { get; set; }
+
+    [Parameter]
+    public bool SuppressHeading { get; set; }
+
+    [Parameter]
+    public required string Title { get; set; }
 }

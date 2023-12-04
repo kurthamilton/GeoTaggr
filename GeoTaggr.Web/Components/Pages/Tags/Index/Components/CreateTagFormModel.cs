@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using GeoTaggr.Web.Components.Shared.Forms.Selects;
 
-namespace GeoTaggr.Web.Components.Pages.Tags.Components;
+namespace GeoTaggr.Web.Components.Pages.Tags.Index.Components;
 
 public class CreateTagFormModel
 {
