@@ -18,13 +18,16 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{2BFAA30C-A81A-433B-8420-9F6C88867C63}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		README.md = README.md
 		run.bat = run.bat
 		TODO.txt = TODO.txt
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{F780801C-F31F-4F88-A0B6-D0CC7FD86221}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTaggr.Services.Tests", "GeoTaggr.Services.Tests\GeoTaggr.Services.Tests.csproj", "{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GeoTaggr.Services.Tests", "GeoTaggr.Services.Tests\GeoTaggr.Services.Tests.csproj", "{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeoTaggr.Data.Sqlite.Migrations", "GeoTaggr.Data.Sqlite.Migrations\GeoTaggr.Data.Sqlite.Migrations.csproj", "{379AB620-1B2F-4176-8DC9-71A5F453D263}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,6 +63,10 @@ Global
 		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{327C69C3-2EBB-4F72-AADD-C4C1AB5C467D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{379AB620-1B2F-4176-8DC9-71A5F453D263}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{379AB620-1B2F-4176-8DC9-71A5F453D263}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{379AB620-1B2F-4176-8DC9-71A5F453D263}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{379AB620-1B2F-4176-8DC9-71A5F453D263}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

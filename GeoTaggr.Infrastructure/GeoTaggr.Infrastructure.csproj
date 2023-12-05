@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\GeoTaggr.Data.Sqlite.Migrations\GeoTaggr.Data.Sqlite.Migrations.csproj" />
     <ProjectReference Include="..\GeoTaggr.Data.Sqlite\GeoTaggr.Data.Sqlite.csproj" />
     <ProjectReference Include="..\GeoTaggr.Data\GeoTaggr.Data.csproj" />
     <ProjectReference Include="..\GeoTaggr.Services\GeoTaggr.Services.csproj" />

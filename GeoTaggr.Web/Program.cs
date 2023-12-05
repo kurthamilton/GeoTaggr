@@ -1,6 +1,8 @@
+using GeoTaggr.Data.Sqlite.Migrations;
 using GeoTaggr.Infrastructure;
 using GeoTaggr.Web.Common;
 using GeoTaggr.Web.Components;
+using Microsoft.EntityFrameworkCore;
 using MudBlazor.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -18,6 +20,14 @@ IDependencyContainer container = new DependencyContainer(services);
 DependencyConfig.RegisterDependencies(container, builder.Configuration);
 
 var app = builder.Build();
+
+// run database migrations, and create new if necessary
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider
+        .GetRequiredService<MigrationsContext>();
+    dbContext.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

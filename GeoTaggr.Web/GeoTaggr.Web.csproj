@@ -24,13 +24,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\GeoTaggr.Core\GeoTaggr.Core.csproj" />
+    <ProjectReference Include="..\GeoTaggr.Data.Sqlite.Migrations\GeoTaggr.Data.Sqlite.Migrations.csproj" />
     <ProjectReference Include="..\GeoTaggr.Data\GeoTaggr.Data.csproj" />
     <ProjectReference Include="..\GeoTaggr.Infrastructure\GeoTaggr.Infrastructure.csproj" />
     <ProjectReference Include="..\GeoTaggr.Services\GeoTaggr.Services.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Components\Shared\Breadcrumbs\" />
   </ItemGroup>
 
 </Project>

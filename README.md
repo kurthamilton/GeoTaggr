@@ -6,16 +6,22 @@ Tag recognisable features at different locations to build your own knowledgebase
 
 ## Getting started
 
-1. Create a local [SQLite](https://www.sqlite.org/index.html) database. 
-	- File can be saved within the solution - *.sqlite3 files are gitignored
-2. Register for a Google Maps [API Key](https://developers.google.com/maps/documentation/javascript/get-api-key)
-3. Add an `appsettings.Development.json` file to the `GeoTaggr.Web` project.
+1. Register for a Google Maps [API Key](https://developers.google.com/maps/documentation/javascript/get-api-key)
+2. Add an `appsettings.Development.json` file to the `GeoTaggr.Web` project.
 ```
 {
-  "ConnectionStrings": {
-    "geotaggr-sql": "Data Source=<PATH_TO_SQLITE3_FILE>;"
-  },
   "GoogleMapsApiKey": "<GOOGLE_MAPS_API_KEY>"
 }
 ```
+4. Install [EF Core CLI tools](https://learn.microsoft.com/en-us/ef/core/cli/dotnet)
 
+## Contributing
+
+### Updating the database schema
+
+Create a new EF migration run the following command from the `GeoTaggr.Data.Sqlite.Migrations` project
+
+`dotnet ef migrations add <NAME>`
+
+This will create a migration stub in which you can write the migration (typically raw SQL). 
+The new migration(s) will run on next project startup.
